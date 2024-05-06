@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SeatSelectionView: View {
     @StateObject private var viewModel: SeatSelectionViewModel
+    @State private var shouldNavigate = false // State variable to control navigation
     
     init(timeSlot: TimeSlot) {
         let availableSeats = timeSlot.seats
@@ -50,6 +51,12 @@ struct SeatSelectionView: View {
             Divider()
                 .padding(.vertical, 8)
             
+            // Front of Screen label
+            Text("Front of Screen")
+                .font(.headline)
+                .bold()
+                .padding(.bottom, 8)
+            
             // Grid layout for seats
             HStack(alignment: .top) {
                 // Row labels on the left
@@ -57,21 +64,21 @@ struct SeatSelectionView: View {
                     ForEach(rows, id: \.self) { row in
                         Text(row)
                             .fontWeight(.bold)
-                            .frame(width: 20, height: 25) // Adjusted width and height
-                            .padding(.vertical, 4) // Additional padding for better spacing
+                            .frame(width: 20, height: 25)
+                            .padding(.vertical, 4)
                     }
                 }
                 .padding(.trailing, 8)
                 
                 // Seat grid
-                VStack(alignment: .leading, spacing: 12) { // Increase spacing between rows
+                VStack(alignment: .leading, spacing: 12) {
                     ForEach(rows, id: \.self) { row in
                         HStack(spacing: 2) {
                             ForEach(columns, id: \.self) { column in
                                 // Add a wider gap to simulate the aisle
                                 if column == 3 || column == 9 {
                                     Spacer()
-                                        .frame(width: 20) // Wider aisle
+                                        .frame(width: 20)
                                 }
                                 
                                 let seatID = "\(row)\(column)"
@@ -88,14 +95,21 @@ struct SeatSelectionView: View {
             }
             .padding()
             
+            // Proceed button that reserves and navigates
             Button("Proceed") {
                 viewModel.reserveSelectedSeats()
-                // In a real app, navigate back to the main view or perform other actions here
+                shouldNavigate = true // Trigger navigation
             }
             .padding()
             .background(Color.black)
             .foregroundColor(.white)
             .cornerRadius(10)
+            .padding(.top, 8)
+            
+            // NavigationLink to MainView triggered by state
+            NavigationLink(destination: MainView(), isActive: $shouldNavigate) {
+                EmptyView()
+            }
         }
     }
 }
