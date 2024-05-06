@@ -1,5 +1,5 @@
 Cinema Ticket Booking App - README
-Welcome to our Cinema Ticket Booking App, built with Swift! This convenient tool allows you to effortlessly book movie tickets. Browse movies currently showing, choose your preferred showtime, select seats, and complete online payments - all within the app.
+Welcome to our Cinema Ticket Booking App, built with Swift! This convenient tool allows you to effortlessly book movie tickets. Browse movies currently showing, choose your preferred showtime, select seats, and complete payments - all within the app.
 
 Project Setup
 This application is developed using Swift. Before running it, ensure your system has the following dependencies installed:
