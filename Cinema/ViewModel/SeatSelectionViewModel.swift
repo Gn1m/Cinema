@@ -6,11 +6,11 @@
 //
 
 
-// SeatSelectionViewModel.swift
 import Foundation
 import SwiftUI
 
 class SeatSelectionViewModel: ObservableObject {
+    
     @Published var seats: [Seat]
     @Published var selectedSeats: Set<String> = []
     @Published var adultTickets: Int = 0
@@ -43,6 +43,5 @@ class SeatSelectionViewModel: ObservableObject {
         for seat in seats where selectedSeats.contains(seat.id) {
             seat.status = .reserved
         }
-        selectedSeats.removeAll()
     }
 }

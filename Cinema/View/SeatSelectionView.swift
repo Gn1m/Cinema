@@ -112,6 +112,7 @@ struct SeatSelectionView: View {
             }
         }
     }
+
 }
 
 struct SeatView: View {

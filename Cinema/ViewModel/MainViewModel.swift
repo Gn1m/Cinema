@@ -3,23 +3,22 @@
 //  Cinema
 //
 //  Created by Ming Z on 5/5/2024.
-//
 
 import Foundation
 import Combine
 
-// 更新的 MainViewModel 示例
 class MainViewModel: ObservableObject {
     @Published var movies: [Movie] = []
+    private var hasLoadedMovies = false
 
     init() {
-        loadMovies()
+        if !hasLoadedMovies {
+            loadMovies()
+            hasLoadedMovies = true
+        }
     }
 
     func loadMovies() {
-        // 更新样本电影数据
-        self.movies = SampleMoviesProvider.getSampleMovies()
+        movies = SampleMoviesProvider.getSampleMovies()
     }
 }
-
-
