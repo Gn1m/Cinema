@@ -11,9 +11,12 @@ import SwiftUI
 struct SeatSelectionView: View {
     @StateObject private var viewModel: SeatSelectionViewModel
     @State private var shouldNavigate = false
+    private let allTimeSlots: [TimeSlot] // Keep this if needed for initial seat setup
 
-    init(timeSlot: TimeSlot) {
-        _viewModel = StateObject(wrappedValue: SeatSelectionViewModel(initialSeats: timeSlot.seats))
+    // Initializer takes the initial time slot and all available time slots
+    init(initialTimeSlot: TimeSlot, allTimeSlots: [TimeSlot]) {
+        _viewModel = StateObject(wrappedValue: SeatSelectionViewModel(initialTimeSlot: initialTimeSlot))
+        self.allTimeSlots = allTimeSlots
     }
 
     private var rows: [String] {
@@ -106,6 +109,8 @@ struct SeatSelectionView: View {
                 Text(errorMessage)
                     .foregroundColor(.red)
                     .padding(.top, 8)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 16)
             }
             
             // Proceed button that reserves and navigates
@@ -126,8 +131,12 @@ struct SeatSelectionView: View {
                 EmptyView()
             }
         }
+        .onAppear {
+            viewModel.loadReservations()
+        }
     }
 }
+
 
 
 

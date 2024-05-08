@@ -10,6 +10,7 @@ import SwiftUI
 
 class SeatSelectionViewModel: ObservableObject {
     
+    @Published var currentTimeSlot: TimeSlot // Currently selected time slot
     @Published var seats: [Seat]
     @Published var selectedSeats: Set<String> = []
     @Published var adultTickets: Int = 0
@@ -19,8 +20,16 @@ class SeatSelectionViewModel: ObservableObject {
     private let adultTicketPrice: Double = 12.0
     private let childTicketPrice: Double = 8.0
 
-    init(initialSeats: [Seat]) {
-        self.seats = initialSeats
+    init(initialTimeSlot: TimeSlot) {
+        self.currentTimeSlot = initialTimeSlot
+        self.seats = initialTimeSlot.seats
+    }
+
+    // Update seats based on the selected time slot
+    func updateSeats(for timeSlot: TimeSlot) {
+        self.currentTimeSlot = timeSlot
+        self.seats = timeSlot.seats
+        self.selectedSeats = [] // Clear selected seats
     }
     
     var totalTicketCount: Int {
@@ -30,20 +39,15 @@ class SeatSelectionViewModel: ObservableObject {
     var totalPrice: Double {
         return (Double(adultTickets) * adultTicketPrice) + (Double(childTickets) * childTicketPrice)
     }
-    
+
     func toggleSeatSelection(_ seatID: String) {
-        // If the seat is already selected, remove it from the set
         if selectedSeats.contains(seatID) {
             selectedSeats.remove(seatID)
             errorMessage = nil
-        }
-        // Check if the current number of selected seats is less than the total ticket count
-        else if selectedSeats.count < totalTicketCount {
+        } else if selectedSeats.count < totalTicketCount {
             selectedSeats.insert(seatID)
             errorMessage = nil
-        }
-        // Otherwise, set an error message
-        else {
+        } else {
             errorMessage = "You've exceeded the number of available seats. Please adjust your ticket count."
         }
     }
@@ -51,7 +55,6 @@ class SeatSelectionViewModel: ObservableObject {
     func reserveSelectedSeats() {
         for seatID in selectedSeats {
             if let index = seats.firstIndex(where: { $0.id == seatID }) {
-                // Check if the seat is already reserved
                 if seats[index].status == .reserved {
                     errorMessage = "One or more seats have already been reserved. Please select different seats."
                     return
@@ -60,7 +63,24 @@ class SeatSelectionViewModel: ObservableObject {
                 }
             }
         }
-        // Clear any error messages after successful reservation
         errorMessage = nil
+        saveReservations()
+    }
+
+    // Save the reservation information locally
+    private func saveReservations() {
+        let reservedSeats = seats.filter { $0.status == .reserved }.map { $0.id }
+        UserDefaults.standard.set(reservedSeats, forKey: "reservedSeats_\(currentTimeSlot.id)")
+    }
+
+    // Load the reservation information for the current time slot
+    func loadReservations() {
+        if let reservedSeats = UserDefaults.standard.array(forKey: "reservedSeats_\(currentTimeSlot.id)") as? [String] {
+            for seatID in reservedSeats {
+                if let index = seats.firstIndex(where: { $0.id == seatID }) {
+                    seats[index] = seats[index].withStatus(.reserved)
+                }
+            }
+        }
     }
 }

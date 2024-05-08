@@ -94,7 +94,8 @@ struct MovieDetailView: View {
                             Calendar.current.isDate(session.date, inSameDayAs: selectedDate)
                         }) { session in
                             ForEach(session.timeSlots) { slot in
-                                NavigationLink(destination: SeatSelectionView(timeSlot: slot)) {
+                                // 提供 `initialTimeSlot` 和 `allTimeSlots` 参数
+                                NavigationLink(destination: SeatSelectionView(initialTimeSlot: slot, allTimeSlots: session.timeSlots)) {
                                     VStack {
                                         Text(slot.startTime, style: .time)
                                     }
