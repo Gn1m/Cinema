@@ -38,11 +38,13 @@ class SampleMoviesProvider {
                 let startTime = getDateTime(baseDate: baseDate, timeString: timeString)
                 let endTime = startTime.addingTimeInterval(2 * 60 * 60) // 电影持续 2 小时
                 let slotID = "\(timeString) - \(endTime)"
-                timeSlots.append(TimeSlot(id: slotID, startTime: startTime, endTime: endTime, seats: generateSeats()))
+                let seats = Seat.generateSeats()
+                timeSlots.append(TimeSlot(id: slotID, startTime: startTime, endTime: endTime, seats: seats))
             }
             return timeSlots
         }
 
+        
         // 生成每天的 `Session`
         func generateSessions(for baseDate: Date) -> [Session] {
             var sessions = [Session]()
@@ -57,23 +59,6 @@ class SampleMoviesProvider {
             return sessions
         }
 
-        // 示例座位生成器
-        func generateSeats() -> [Seat] {
-            let rows = ["A", "B", "C", "D", "E"] // 5 排
-            let seatsPerRow = 10 // 每排 10 个座位
-
-            var seats = [Seat]()
-            
-            // 遍历行并创建每排的座位
-            for row in rows {
-                for number in 1...seatsPerRow {
-                    let seat = Seat(row: row, number: number, status: .available)
-                    seats.append(seat)
-                }
-            }
-
-            return seats
-        }
 
         // 使用同一组 `sessions` 为所有电影提供相同场次
         let commonSessions = generateSessions(for: today)

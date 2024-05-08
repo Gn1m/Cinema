@@ -5,19 +5,25 @@
 //  Created by Ming Z on 5/5/2024.
 //
 
+
 import SwiftUI
 
 struct SeatSelectionView: View {
     @StateObject private var viewModel: SeatSelectionViewModel
-    @State private var shouldNavigate = false // State variable to control navigation
-    
+    @State private var shouldNavigate = false
+
     init(timeSlot: TimeSlot) {
-        let availableSeats = timeSlot.seats
-        _viewModel = StateObject(wrappedValue: SeatSelectionViewModel(initialSeats: availableSeats))
+        _viewModel = StateObject(wrappedValue: SeatSelectionViewModel(initialSeats: timeSlot.seats))
     }
-    
-    private let rows = ["A", "B", "C", "D", "E"]
-    private let columns = Array(1...10)
+
+    private var rows: [String] {
+        Set(viewModel.seats.map { $0.row }).sorted()
+    }
+
+    private var columns: [Int] {
+        let maxNumber = viewModel.seats.map { $0.number }.max() ?? 0
+        return Array(1...maxNumber)
+    }
     
     var body: some View {
         VStack {
@@ -95,10 +101,19 @@ struct SeatSelectionView: View {
             }
             .padding()
             
+            // Display error message if any
+            if let errorMessage = viewModel.errorMessage {
+                Text(errorMessage)
+                    .foregroundColor(.red)
+                    .padding(.top, 8)
+            }
+            
             // Proceed button that reserves and navigates
             Button("Proceed") {
                 viewModel.reserveSelectedSeats()
-                shouldNavigate = true // Trigger navigation
+                if viewModel.errorMessage == nil {
+                    shouldNavigate = true
+                }
             }
             .padding()
             .background(Color.black)
@@ -112,8 +127,9 @@ struct SeatSelectionView: View {
             }
         }
     }
-
 }
+
+
 
 struct SeatView: View {
     let seat: Seat?
