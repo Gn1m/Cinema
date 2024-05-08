@@ -5,21 +5,12 @@
 //  Created by 1 on 3/5/2024.
 //
 
-// ContentView.swift
 import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        TabView {
-            MainView()
-                .tabItem {
-                    Label("Movies", systemImage: "film")
-                }
-
-            OrdersView()
-                .tabItem {
-                    Label("Orders", systemImage: "cart")
-                }
+        NavigationView {
+            MainView() // Use MainView as the primary screen
         }
     }
 }

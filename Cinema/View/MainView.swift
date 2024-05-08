@@ -9,22 +9,55 @@ import SwiftUI
 
 struct MainView: View {
     @StateObject private var viewModel = MainViewModel()
-    
+    @State private var navigateToOrders = false
+    @State private var navigateToAccount = false
+
     var body: some View {
-        NavigationView {
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 16) {
-                    ForEach(viewModel.movies) { movie in
-                        NavigationLink(destination: MovieDetailView(movie: movie)) {
-                            MovieCardView(movie: movie)
-                        }
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 16) {
+                ForEach(viewModel.movies) { movie in
+                    NavigationLink(destination: MovieDetailView(movie: movie)) {
+                        MovieCardView(movie: movie)
                     }
                 }
-                .padding(.horizontal, 16)
             }
-            .navigationTitle("Movies")
+            .padding(.horizontal, 16)
         }
-        .navigationBarBackButtonHidden(true)
+        .navigationTitle("Movies")
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Menu {
+                    Button(action: {
+                        navigateToOrders = true
+                    }) {
+                        Label("Orders", systemImage: "cart")
+                    }
+                    
+                    Button(action: {
+                        navigateToAccount = true
+                    }) {
+                        Label("Account", systemImage: "person.crop.circle")
+                    }
+                } label: {
+                    Image(systemName: "info.circle")
+                }
+            }
+        }
+
+        // Use hidden NavigationLinks to navigate to other views
+        NavigationLink(destination: OrdersView(), isActive: $navigateToOrders) {
+            EmptyView()
+        }
+        
+        NavigationLink(destination: AccountView(), isActive: $navigateToAccount) {
+            EmptyView()
+        }
+    }
+}
+
+struct MainView_Previews: PreviewProvider {
+    static var previews: some View {
+        MainView()
     }
 }
 
@@ -59,12 +92,5 @@ struct MovieCardView: View {
         .shadow(radius: 4)
         .padding(.vertical, 8)
         
-    }
-}
-
-// MainView 的预览
-struct MainView_Previews: PreviewProvider {
-    static var previews: some View {
-        MainView()
     }
 }
