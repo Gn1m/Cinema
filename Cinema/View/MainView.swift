@@ -11,7 +11,7 @@ struct MainView: View {
     @StateObject private var viewModel = MainViewModel()
     @State private var navigateToOrders = false
     @State private var navigateToAccount = false
-
+    
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 16) {
@@ -52,6 +52,7 @@ struct MainView: View {
         NavigationLink(destination: AccountView(), isActive: $navigateToAccount) {
             EmptyView()
         }
+        .navigationBarBackButtonHidden(true) 
     }
 }
 
