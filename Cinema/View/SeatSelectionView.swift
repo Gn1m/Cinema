@@ -10,10 +10,9 @@ import SwiftUI
 
 struct SeatSelectionView: View {
     @StateObject private var viewModel: SeatSelectionViewModel
-    @State private var shouldNavigate = false
-    private let allTimeSlots: [TimeSlot] // Keep this if needed for initial seat setup
+    @State private var navigateToMainView = false
+    private let allTimeSlots: [TimeSlot]
 
-    // Initializer takes the initial time slot and all available time slots
     init(initialTimeSlot: TimeSlot, allTimeSlots: [TimeSlot]) {
         _viewModel = StateObject(wrappedValue: SeatSelectionViewModel(initialTimeSlot: initialTimeSlot))
         self.allTimeSlots = allTimeSlots
@@ -115,19 +114,22 @@ struct SeatSelectionView: View {
             
             // Proceed button that reserves and navigates
             Button("Proceed") {
-                viewModel.reserveSelectedSeats()
-                if viewModel.errorMessage == nil {
-                    shouldNavigate = true
+                if viewModel.isSeatSelectionValid() {
+                    viewModel.reserveSelectedSeats()
+                    navigateToMainView = true
+                } else {
+                    viewModel.errorMessage = "Please select exactly \(viewModel.totalTicketCount) seats."
                 }
             }
             .padding()
-            .background(Color.black)
+            .background(viewModel.isSeatSelectionValid() ? Color.black : Color.gray) // Disable button when not matching
             .foregroundColor(.white)
             .cornerRadius(10)
             .padding(.top, 8)
+            .disabled(!viewModel.isSeatSelectionValid())
             
             // NavigationLink to MainView triggered by state
-            NavigationLink(destination: MainView(), isActive: $shouldNavigate) {
+            NavigationLink(destination: MainView(), isActive: $navigateToMainView) {
                 EmptyView()
             }
         }
@@ -136,6 +138,7 @@ struct SeatSelectionView: View {
         }
     }
 }
+
 
 
 

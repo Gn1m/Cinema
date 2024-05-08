@@ -24,6 +24,7 @@ struct MainView: View {
             }
             .navigationTitle("Movies")
         }
+        .navigationBarBackButtonHidden(true)
     }
 }
 
