@@ -1,11 +1,3 @@
-//
-//  SeatSelectionView.swift
-//  Cinema
-//
-//  Created by Ming Z on 5/5/2024.
-//
-
-
 import SwiftUI
 
 struct SeatSelectionView: View {
@@ -26,28 +18,28 @@ struct SeatSelectionView: View {
         let maxNumber = viewModel.seats.map { $0.number }.max() ?? 0
         return Array(1...maxNumber)
     }
-    
+
     var body: some View {
         VStack {
             // Ticket selection
             VStack(alignment: .leading, spacing: 10) {
                 Text("Select Tickets")
                     .font(.headline)
-                
+
                 HStack {
                     Text("Adult Tickets:")
                     Stepper(value: $viewModel.adultTickets, in: 0...10) {
                         Text("\(viewModel.adultTickets)")
                     }
                 }
-                
+
                 HStack {
                     Text("Child Tickets:")
                     Stepper(value: $viewModel.childTickets, in: 0...10) {
                         Text("\(viewModel.childTickets)")
                     }
                 }
-                
+
                 Text("Total Price: $\(viewModel.totalPrice, specifier: "%.2f")")
                     .font(.subheadline)
                     .bold()
@@ -55,16 +47,16 @@ struct SeatSelectionView: View {
             }
             .padding(.horizontal)
             .padding(.top, 16)
-            
+
             Divider()
                 .padding(.vertical, 8)
-            
+
             // Front of Screen label
             Text("Front of Screen")
                 .font(.headline)
                 .bold()
                 .padding(.bottom, 8)
-            
+
             // Grid layout for seats
             HStack(alignment: .top) {
                 // Row labels on the left
@@ -77,7 +69,7 @@ struct SeatSelectionView: View {
                     }
                 }
                 .padding(.trailing, 8)
-                
+
                 // Seat grid
                 VStack(alignment: .leading, spacing: 12) {
                     ForEach(rows, id: \.self) { row in
@@ -88,7 +80,7 @@ struct SeatSelectionView: View {
                                     Spacer()
                                         .frame(width: 20)
                                 }
-                                
+
                                 let seatID = "\(row)\(column)"
                                 let seat = viewModel.seats.first { $0.id == seatID }
                                 SeatView(seat: seat, isSelected: viewModel.selectedSeats.contains(seatID)) {
@@ -102,7 +94,7 @@ struct SeatSelectionView: View {
                 }
             }
             .padding()
-            
+
             // Display error message if any
             if let errorMessage = viewModel.errorMessage {
                 Text(errorMessage)
@@ -111,7 +103,7 @@ struct SeatSelectionView: View {
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 16)
             }
-            
+
             // Proceed button that reserves and navigates
             Button("Proceed") {
                 if viewModel.isSeatSelectionValid() {
@@ -122,52 +114,21 @@ struct SeatSelectionView: View {
                 }
             }
             .padding()
-            .background(viewModel.isSeatSelectionValid() ? Color.black : Color.gray) // Disable button when not matching
+            .background(viewModel.isSeatSelectionValid() ? Color.black : Color.gray)
             .foregroundColor(.white)
             .cornerRadius(10)
             .padding(.top, 8)
             .disabled(!viewModel.isSeatSelectionValid())
-            
-            // NavigationLink to MainView triggered by state
-            NavigationLink(destination: MainView(), isActive: $navigateToMainView) {
+
+            // NavigationLink to ContentView (Main View) with back button hidden
+            NavigationLink(destination: ContentView()
+                            .navigationBarBackButtonHidden(true),
+                           isActive: $navigateToMainView) {
                 EmptyView()
             }
         }
         .onAppear {
             viewModel.loadReservations()
         }
-    }
-}
-
-
-
-
-
-struct SeatView: View {
-    let seat: Seat?
-    let isSelected: Bool
-    let action: () -> Void
-    
-    var body: some View {
-        Button(action: action) {
-            Rectangle()
-                .fill(seatColor)
-                .frame(width: 30, height: 30)
-                .cornerRadius(4)
-        }
-        .disabled(seat?.status == .reserved)
-    }
-    
-    private var seatColor: Color {
-        if let seat = seat {
-            if seat.status == .reserved {
-                return .red
-            } else if isSelected {
-                return .green
-            } else {
-                return .gray
-            }
-        }
-        return .clear
     }
 }
