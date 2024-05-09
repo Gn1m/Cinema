@@ -21,7 +21,6 @@
 		0803255A2BE86E6200CE6E2F /* OrdersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080325592BE86E6200CE6E2F /* OrdersView.swift */; };
 		0803255C2BE8709100CE6E2F /* Order.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0803255B2BE8709100CE6E2F /* Order.swift */; };
 		0803255E2BE870BA00CE6E2F /* OrderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0803255D2BE870BA00CE6E2F /* OrderViewModel.swift */; };
-		080EEBC12BEC51EB005E0012 /* t.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080EEBC02BEC51EB005E0012 /* t.swift */; };
 		08916ABB2BEB9288002FA2AD /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08916ABA2BEB9288002FA2AD /* AccountView.swift */; };
 		08B65B122BE500FB00CA1B2A /* CinemaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B65B112BE500FB00CA1B2A /* CinemaApp.swift */; };
 		08B65B142BE500FB00CA1B2A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B65B132BE500FB00CA1B2A /* ContentView.swift */; };
@@ -44,7 +43,6 @@
 		080325592BE86E6200CE6E2F /* OrdersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrdersView.swift; sourceTree = "<group>"; };
 		0803255B2BE8709100CE6E2F /* Order.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Order.swift; sourceTree = "<group>"; };
 		0803255D2BE870BA00CE6E2F /* OrderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderViewModel.swift; sourceTree = "<group>"; };
-		080EEBC02BEC51EB005E0012 /* t.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = t.swift; sourceTree = "<group>"; };
 		08916ABA2BEB9288002FA2AD /* AccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountView.swift; sourceTree = "<group>"; };
 		08B65B0E2BE500FB00CA1B2A /* Cinema.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cinema.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		08B65B112BE500FB00CA1B2A /* CinemaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CinemaApp.swift; sourceTree = "<group>"; };
@@ -123,7 +121,6 @@
 				080325502BE72E2900CE6E2F /* SeatSelectionView.swift */,
 				080325592BE86E6200CE6E2F /* OrdersView.swift */,
 				08916ABA2BEB9288002FA2AD /* AccountView.swift */,
-				080EEBC02BEC51EB005E0012 /* t.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -215,7 +212,6 @@
 				08916ABB2BEB9288002FA2AD /* AccountView.swift in Sources */,
 				080325492BE71B4300CE6E2F /* SampleMoviesProvider.swift in Sources */,
 				080325412BE716C500CE6E2F /* Seat.swift in Sources */,
-				080EEBC12BEC51EB005E0012 /* t.swift in Sources */,
 				080325432BE7189F00CE6E2F /* MainViewModel.swift in Sources */,
 				0803254F2BE72DFD00CE6E2F /* MovieDetailView.swift in Sources */,
 				0803255E2BE870BA00CE6E2F /* OrderViewModel.swift in Sources */,
