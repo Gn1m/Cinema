@@ -13,12 +13,24 @@ struct ContentView: View {
     @State private var navigateToAccount = false
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
+                // Switch between Now Showing and Coming Soon
+                Picker("Category", selection: $viewModel.selectedCategory) {
+                    Text("Now Showing").tag(ContentViewModel.MovieCategory.nowShowing)
+                    Text("Coming Soon").tag(ContentViewModel.MovieCategory.comingSoon)
+                }
+                .pickerStyle(SegmentedPickerStyle())
+                .padding(.horizontal)
+                .onChange(of: viewModel.selectedCategory) { newCategory in
+                    viewModel.updateSelectedMovies(category: newCategory)
+                }
+
+                // Movie cards
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 16) {
-                        ForEach(viewModel.movies) { movie in
-                            NavigationLink(destination: MovieDetailView(movie: movie)) {
+                        ForEach(viewModel.selectedMovies, id: \.id) { movie in
+                            NavigationLink(value: movie) {
                                 MovieCardView(movie: movie)
                             }
                         }
@@ -46,11 +58,25 @@ struct ContentView: View {
                     }
                 }
 
-                NavigationLink(destination: OrdersView(), isActive: $navigateToOrders) {
-                    EmptyView()
-                }
+                // Navigation to Orders and Account
+                NavigationLink(value: "orders", label: { EmptyView() })
+                    .hidden()
+                    .frame(width: 0, height: 0)
 
-                NavigationLink(destination: AccountView(), isActive: $navigateToAccount) {
+                NavigationLink(value: "account", label: { EmptyView() })
+                    .hidden()
+                    .frame(width: 0, height: 0)
+            }
+            .navigationDestination(for: Movie.self) { movie in
+                MovieDetailView(movie: movie)
+            }
+            .navigationDestination(for: String.self) { destination in
+                switch destination {
+                case "orders":
+                    OrdersView()
+                case "account":
+                    AccountView()
+                default:
                     EmptyView()
                 }
             }

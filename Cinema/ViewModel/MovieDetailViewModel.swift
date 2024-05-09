@@ -16,11 +16,18 @@ class MovieDetailViewModel: ObservableObject {
 
     init(movie: Movie) {
         self.movie = movie
-        self.sessions = movie.sessions
+        
+        // Check if the movie is a ReleasedMovie to assign sessions
+        if let releasedMovie = movie as? ReleasedMovie {
+            self.sessions = releasedMovie.sessions
+        } else {
+            self.sessions = []
+        }
     }
 
     func selectSession(byID sessionID: String) {
         self.selectedSession = sessions.first { $0.id == sessionID }
     }
 }
+
 

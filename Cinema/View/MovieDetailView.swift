@@ -43,7 +43,7 @@ struct MovieDetailView: View {
                     }
                 }
                 
-                // 电影信息
+                // 电影信息部分
                 VStack(alignment: .leading, spacing: 8) {
                     Text(movie.name)
                         .font(.largeTitle)
@@ -63,51 +63,53 @@ struct MovieDetailView: View {
                 
                 Divider()
                 
-                // 日期和场次
-                VStack(alignment: .leading) {
-                    Text("Sessions")
-                        .font(.headline)
-                        .padding(.horizontal)
-                    
-                    // 日期选择
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack {
-                            // 使用 `sessionDates` 生成日期按钮
-                            ForEach(sessionDates, id: \.self) { date in
-                                Button(action: {
-                                    selectedDate = date
-                                }) {
-                                    Text(date, style: .date)
-                                        .padding()
-                                        .background(selectedDate == date ? Color.red : Color.gray) // 判断条件
-                                        .foregroundColor(.white)
-                                        .cornerRadius(8)
-                                }
-                            }
-                        }
-                        .padding(.horizontal)
-                    }
-                    
-                    // 过滤并显示当天的时间段
-                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))], spacing: 16) {
-                        ForEach(viewModel.sessions.filter { session in
-                            Calendar.current.isDate(session.date, inSameDayAs: selectedDate)
-                        }) { session in
-                            ForEach(session.timeSlots) { slot in
-                                // 提供 `initialTimeSlot` 和 `allTimeSlots` 参数
-                                NavigationLink(destination: SeatSelectionView(initialTimeSlot: slot, allTimeSlots: session.timeSlots)) {
-                                    VStack {
-                                        Text(slot.startTime, style: .time)
+                // 根据电影类型显示不同内容
+                if let releasedMovie = movie as? ReleasedMovie {
+                    // 显示 ReleasedMovie 类型的独特部分
+                    VStack(alignment: .leading) {
+                        Text("Sessions")
+                            .font(.headline)
+                            .padding(.horizontal)
+                        
+                        // 日期选择
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack {
+                                // 使用 `sessionDates` 生成日期按钮
+                                ForEach(sessionDates, id: \.self) { date in
+                                    Button(action: {
+                                        selectedDate = date
+                                    }) {
+                                        Text(date, style: .date)
+                                            .padding()
+                                            .background(selectedDate == date ? Color.red : Color.gray) // 判断条件
+                                            .foregroundColor(.white)
+                                            .cornerRadius(8)
                                     }
-                                    .padding()
-                                    .background(Color.red)
-                                    .cornerRadius(20)
-                                    .foregroundColor(.white)
+                                }
+                            }
+                            .padding(.horizontal)
+                        }
+                        
+                        // 过滤并显示当天的时间段
+                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))], spacing: 16) {
+                            ForEach(viewModel.sessions.filter { session in
+                                Calendar.current.isDate(session.date, inSameDayAs: selectedDate)
+                            }) { session in
+                                ForEach(session.timeSlots) { slot in
+                                    NavigationLink(destination: SeatSelectionView(initialTimeSlot: slot, allTimeSlots: session.timeSlots)) {
+                                        VStack {
+                                            Text(slot.startTime, style: .time)
+                                        }
+                                        .padding()
+                                        .background(Color.red)
+                                        .cornerRadius(20)
+                                        .foregroundColor(.white)
+                                    }
                                 }
                             }
                         }
+                        .padding()
                     }
-                    .padding()
                 }
             }
         }
@@ -117,7 +119,7 @@ struct MovieDetailView: View {
 // 预览部分
 struct MovieDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        let sampleMovie = SampleMoviesProvider.getSampleMovies().first!
+        let sampleMovie = SampleMoviesProvider.getComingSoonMovies().first!
         MovieDetailView(movie: sampleMovie)
     }
 }
