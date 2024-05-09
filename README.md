@@ -1,14 +1,24 @@
-Cinema Ticket Booking App - README
-Welcome to our Cinema Ticket Booking App, built with Swift! This convenient tool allows you to effortlessly book movie tickets. Browse movies currently showing, choose your preferred showtime, select seats - all within the app.
+# Cinema App
+Cinema is a SwiftUI-based application that allows users to browse and book movie tickets. 
+## Features
 
-Project Setup
-This application is developed using Swift. Before running it, ensure your system has the following dependencies installed:
+- **Movies Browsing**: Scroll through a horizontally displayed list of movies and view details for each one.
+- **Seat Selection**: Select available seats for a given time slot and complete the ticket purchase process.
+- **Orders and Account**: Review past orders and manage account settings.
 
-Xcode (latest version recommended)
-[Additional Dependencies - List any specific Swift libraries used]
-Running the Application
+## Project Structure
 
-Open the project in Xcode.
-Connect your device or launch the simulator.
-Click the "Run" button (play triangle) to start the application.
+- **Views**: Contains the main views of the application.
+  - `ContentView`: Main view where users can browse movies and navigate to other sections.
+  - `SeatSelectionView`: Allows users to select seats and reserve tickets.
+- **Components**: Reusable UI components for consistent and modular design.
+  - `MovieCardView`: Displays an individual movie in a scrollable list.
+  - `SeatView`: Represents individual seats in the grid layout.
+- **ViewModels**: Holds the view models for managing the logic and data of the main views.
+- **Models**: Data models representing the entities like `Movie`, `Seat`, and `TimeSlot`.
 
+## Requirements
+
+- Swift 5.3 or later
+- iOS 14.0 or later
+- Xcode 12.0 or later
