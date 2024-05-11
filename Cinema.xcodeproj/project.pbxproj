@@ -24,6 +24,8 @@
 		080EEBC62BEC60B0005E0012 /* SeatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080EEBC52BEC60B0005E0012 /* SeatView.swift */; };
 		080EEBC82BEC8A21005E0012 /* ReleasedMovie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080EEBC72BEC8A21005E0012 /* ReleasedMovie.swift */; };
 		080EEBCA2BEC8A7C005E0012 /* ComingSoonMovie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080EEBC92BEC8A7C005E0012 /* ComingSoonMovie.swift */; };
+		080EEBD42BEF4737005E0012 /* OrderDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080EEBD32BEF4737005E0012 /* OrderDetailView.swift */; };
+		088551202BEF5A230090FEA5 /* CinemaModelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0885511F2BEF5A230090FEA5 /* CinemaModelManager.swift */; };
 		08916ABB2BEB9288002FA2AD /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08916ABA2BEB9288002FA2AD /* AccountView.swift */; };
 		08B65B122BE500FB00CA1B2A /* CinemaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B65B112BE500FB00CA1B2A /* CinemaApp.swift */; };
 		08B65B142BE500FB00CA1B2A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B65B132BE500FB00CA1B2A /* ContentView.swift */; };
@@ -50,6 +52,8 @@
 		080EEBC52BEC60B0005E0012 /* SeatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeatView.swift; sourceTree = "<group>"; };
 		080EEBC72BEC8A21005E0012 /* ReleasedMovie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReleasedMovie.swift; sourceTree = "<group>"; };
 		080EEBC92BEC8A7C005E0012 /* ComingSoonMovie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComingSoonMovie.swift; sourceTree = "<group>"; };
+		080EEBD32BEF4737005E0012 /* OrderDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderDetailView.swift; sourceTree = "<group>"; };
+		0885511F2BEF5A230090FEA5 /* CinemaModelManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CinemaModelManager.swift; sourceTree = "<group>"; };
 		08916ABA2BEB9288002FA2AD /* AccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountView.swift; sourceTree = "<group>"; };
 		08B65B0E2BE500FB00CA1B2A /* Cinema.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cinema.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		08B65B112BE500FB00CA1B2A /* CinemaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CinemaApp.swift; sourceTree = "<group>"; };
@@ -102,8 +106,8 @@
 				08B65B202BE5019B00CA1B2A /* View */,
 				08B65B1F2BE5012200CA1B2A /* Model */,
 				08B65B112BE500FB00CA1B2A /* CinemaApp.swift */,
-				08B65B152BE500FD00CA1B2A /* Assets.xcassets */,
 				080325482BE71B4300CE6E2F /* SampleMoviesProvider.swift */,
+				08B65B152BE500FD00CA1B2A /* Assets.xcassets */,
 				08B65B172BE500FD00CA1B2A /* Preview Content */,
 			);
 			path = Cinema;
@@ -127,7 +131,11 @@
 				0803253E2BE7167B00CE6E2F /* Ticket.swift */,
 				080325402BE716C500CE6E2F /* Seat.swift */,
 				0803255B2BE8709100CE6E2F /* Order.swift */,
+<<<<<<< HEAD
 				6C1E31212BECC24C00867025 /* Account.swift */,
+=======
+				0885511F2BEF5A230090FEA5 /* CinemaModelManager.swift */,
+>>>>>>> 26c717324103e67534bdbadd13c22f5629345dc7
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -139,6 +147,7 @@
 				0803254E2BE72DFD00CE6E2F /* MovieDetailView.swift */,
 				080325502BE72E2900CE6E2F /* SeatSelectionView.swift */,
 				080325592BE86E6200CE6E2F /* OrdersView.swift */,
+				080EEBD32BEF4737005E0012 /* OrderDetailView.swift */,
 				08916ABA2BEB9288002FA2AD /* AccountView.swift */,
 				080EEBC22BEC606C005E0012 /* ViewsComponents */,
 			);
@@ -231,6 +240,7 @@
 				08B65B142BE500FB00CA1B2A /* ContentView.swift in Sources */,
 				08916ABB2BEB9288002FA2AD /* AccountView.swift in Sources */,
 				080EEBC62BEC60B0005E0012 /* SeatView.swift in Sources */,
+				080EEBD42BEF4737005E0012 /* OrderDetailView.swift in Sources */,
 				080EEBC82BEC8A21005E0012 /* ReleasedMovie.swift in Sources */,
 				080325492BE71B4300CE6E2F /* SampleMoviesProvider.swift in Sources */,
 				080325412BE716C500CE6E2F /* Seat.swift in Sources */,
@@ -241,6 +251,7 @@
 				0803255A2BE86E6200CE6E2F /* OrdersView.swift in Sources */,
 				080325452BE718D800CE6E2F /* MovieDetailViewModel.swift in Sources */,
 				0803253F2BE7167B00CE6E2F /* Ticket.swift in Sources */,
+				088551202BEF5A230090FEA5 /* CinemaModelManager.swift in Sources */,
 				08B65B122BE500FB00CA1B2A /* CinemaApp.swift in Sources */,
 				080325512BE72E2900CE6E2F /* SeatSelectionView.swift in Sources */,
 				0803255C2BE8709100CE6E2F /* Order.swift in Sources */,
