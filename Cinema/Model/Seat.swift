@@ -13,7 +13,7 @@ enum SeatStatus {
 class Seat: Identifiable {
     let row: String
     let number: Int
-    private let _status: SeatStatus
+    private var _status: SeatStatus  // Changed from `let` to `var` to allow status updates
 
     // 默认行和列的静态常量
     static let defaultRows = ["A", "B", "C", "D", "E"]
@@ -26,7 +26,8 @@ class Seat: Identifiable {
     }
 
     var status: SeatStatus {
-        return _status
+        get { return _status }
+        set { _status = newValue } // Allowing external setting of the status
     }
     
     var id: String {

@@ -12,7 +12,7 @@ class OrderViewModel: ObservableObject {
     static let shared = OrderViewModel()
     
     @Published private(set) var orders: [Order] = []
-
+    
     // 添加新订单
     func addOrder(_ order: Order) {
         orders.append(order)
@@ -27,9 +27,12 @@ class OrderViewModel: ObservableObject {
             orders[index] = Order(movie: currentOrder.movie, session: currentOrder.session, timeSlot: currentOrder.timeSlot, tickets: newTickets)
         }
     }
-
-    // 删除订单
+    
     func removeOrder(id: String) {
-        orders.removeAll { $0.id == id }
+        if let index = orders.firstIndex(where: { $0.id == id }) {
+            let order = orders[index]
+            orders.remove(at: index)
+        }
     }
 }
+    

@@ -85,19 +85,27 @@ class SeatSelectionViewModel: ObservableObject {
             return
         }
 
-        // Create tickets for each type
-        var tickets: [Ticket] = []
-        for _ in 0..<adultTickets {
-            tickets.append(Ticket(type: .adult, quantity: 1, price: adultTicketPrice))
+        // Ensure we have exact number of seats selected as tickets
+        if selectedSeats.count != adultTickets + childTickets {
+            errorMessage = "Number of selected seats does not match the number of tickets."
+            return
         }
-        for _ in 0..<childTickets {
-            tickets.append(Ticket(type: .child, quantity: 1, price: childTicketPrice))
+
+        // Create tickets with seat IDs
+        var tickets: [Ticket] = []
+        let selectedSeatIDs = Array(selectedSeats)
+        for i in 0..<adultTickets {
+            tickets.append(Ticket(type: .adult, quantity: 1, price: adultTicketPrice, seatID: selectedSeatIDs[i]))
+        }
+        for i in 0..<childTickets {
+            tickets.append(Ticket(type: .child, quantity: 1, price: childTicketPrice, seatID: selectedSeatIDs[adultTickets + i]))
         }
 
         // Create and add the order with the correct time slot
         let newOrder = Order(movie: movie, session: session, timeSlot: currentTimeSlot, tickets: tickets)
         OrderViewModel.shared.addOrder(newOrder)
     }
+
 
     func loadReservations() {
         if let reservedSeats = UserDefaults.standard.array(forKey: "reservedSeats_\(currentTimeSlot.id)") as? [String] {
@@ -108,4 +116,11 @@ class SeatSelectionViewModel: ObservableObject {
             }
         }
     }
+    
+    func cancelSeat(seatID: String) {
+            if let index = seats.firstIndex(where: { $0.id == seatID }) {
+                seats[index].status = .available
+            }
+        }
+    
 }
