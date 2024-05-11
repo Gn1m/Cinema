@@ -7,11 +7,11 @@
 
 import Foundation
 
-enum TicketType {
+enum TicketType: Hashable  {
     case adult, child
 }
 
-class Ticket {
+class Ticket: Hashable  {
     private var _type: TicketType
     private var _quantity: Int
     private var _price: Double
@@ -48,4 +48,14 @@ class Ticket {
             _price = newPrice
         }
     }
+    
+    static func == (lhs: Ticket, rhs: Ticket) -> Bool {
+           lhs.type == rhs.type && lhs.quantity == rhs.quantity && lhs.price == rhs.price
+       }
+
+       func hash(into hasher: inout Hasher) {
+           hasher.combine(type)
+           hasher.combine(quantity)
+           hasher.combine(price)
+       }
 }

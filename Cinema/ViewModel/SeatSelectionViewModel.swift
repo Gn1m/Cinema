@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import SwiftUI
+import Combine
 
 class SeatSelectionViewModel: ObservableObject {
     @Published var currentTimeSlot: TimeSlot
@@ -52,16 +52,51 @@ class SeatSelectionViewModel: ObservableObject {
         }
         errorMessage = nil
         saveReservations()
-    }
-
-    // 验证所选座位是否与购买票数相符
-    func isSeatSelectionValid() -> Bool {
-        return selectedSeats.count == totalTicketCount
+        addOrder()  // Automatically add order after seats are reserved
+        
+        // Clear current selections and reset ticket counts after successful order addition
+        selectedSeats.removeAll()
+        adultTickets = 0
+        childTickets = 0
+        errorMessage = nil
     }
 
     private func saveReservations() {
         let reservedSeats = seats.filter { $0.status == .reserved }.map { $0.id }
         UserDefaults.standard.set(reservedSeats, forKey: "reservedSeats_\(currentTimeSlot.id)")
+    }
+    
+    func isSeatSelectionValid() -> Bool {
+            return selectedSeats.count == totalTicketCount
+        }
+
+    private func addOrder() {
+        guard selectedSeats.count == totalTicketCount else {
+            errorMessage = "Please select exactly \(totalTicketCount) seats."
+            return
+        }
+
+        // Fetch the necessary movie and session directly from currentTimeSlot
+        let movie = CinemaModelManager.shared.movie(forID: currentTimeSlot.movieId)
+        let session = CinemaModelManager.shared.session(forID: currentTimeSlot.sessionId)
+
+        guard let movie = movie, let session = session else {
+            errorMessage = "Error fetching movie or session details."
+            return
+        }
+
+        // Create tickets for each type
+        var tickets: [Ticket] = []
+        for _ in 0..<adultTickets {
+            tickets.append(Ticket(type: .adult, quantity: 1, price: adultTicketPrice))
+        }
+        for _ in 0..<childTickets {
+            tickets.append(Ticket(type: .child, quantity: 1, price: childTicketPrice))
+        }
+
+        // Create and add the order with the correct time slot
+        let newOrder = Order(movie: movie, session: session, timeSlot: currentTimeSlot, tickets: tickets)
+        OrderViewModel.shared.addOrder(newOrder)
     }
 
     func loadReservations() {

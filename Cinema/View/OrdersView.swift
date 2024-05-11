@@ -5,69 +5,36 @@
 //  Created by Ming Z on 6/5/2024.
 //
 
-// OrdersView.swift
 import SwiftUI
 
 struct OrdersView: View {
-    @State private var selectedMovie: Movie?
-    @State private var selectedSession: Session?
-    @State private var selectedSeats: [Seat] = []
-    
+    @ObservedObject var viewModel = OrderViewModel.shared
+
     var body: some View {
         NavigationView {
-            VStack {
-                Text("Order details")
-                    .font(.title)
-                
-                NavigationLink(destination: TicketDetailView(movie: selectedMovie, session: selectedSession, seats: selectedSeats)) {
-                    Text("Your ordered ticket")
-                        .font(.headline)
-                        .padding()
-                        .foregroundColor(.white)
-                        .background(Color.blue)
-                        .cornerRadius(10)
+            List {
+                ForEach(viewModel.orders, id: \.id) { order in
+                    NavigationLink(destination: OrderDetailView(order: order)) {
+                        VStack(alignment: .leading) {
+                            Text(order.movie.name)
+                                .font(.headline)
+                            Text("Session: \(order.session.date.formatted())")
+                                .font(.subheadline)
+                            Text("Order ID: \(order.id)")
+                                .font(.subheadline)
+                        }
+                    }
                 }
+                .onDelete(perform: deleteOrder)
             }
             .navigationTitle("Orders")
         }
     }
-}
 
-struct TicketDetailView: View {
-    var movie: Movie?
-    var session: Session?
-    var seats: [Seat]?
-
-    var body: some View {
-        VStack {
-            Text("Ticket Detail View").font(.title)
-            if let movie = movie, let session = session, let seats = seats {
-                List {
-                    Section(header: Text("Movie")) {
-                        Text(movie.name)
-                    }
-                    Section(header: Text("Session")) {
-                        Text(session.id)
-                    }
-                    Section(header: Text("Selected Seats")) {
-                        ForEach(seats, id: \.id) { seat in
-                            Text("Row: \(seat.row), Number: \(seat.number)")
-                        }
-                    }
-                }
-            } else {
-                Text("Ticket information not available.")
-            }
+    func deleteOrder(at offsets: IndexSet) {
+        offsets.forEach { index in
+            let orderId = viewModel.orders[index].id
+            viewModel.removeOrder(id: orderId)
         }
-        .navigationBarTitle("Ticket Details", displayMode: .inline)
     }
 }
-
-struct OrdersView_Previews: PreviewProvider {
-    static var previews: some View {
-        OrdersView()
-    }
-}
-
-
-

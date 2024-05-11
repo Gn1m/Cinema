@@ -8,51 +8,55 @@
 import Foundation
 
 class Session: Identifiable {
-    // 唯一标识符
     private let _id: String
-    // 开始日期（天）
     private var _date: Date
-    // 多个时间段
     private var _timeSlots: [TimeSlot]
+    private let _movieId: String  // Storing the ID of the movie associated with the session
 
-    // 初始化器
-    init(id: String, date: Date, timeSlots: [TimeSlot]) {
+    init(id: String, date: Date, timeSlots: [TimeSlot], movieId: String) {
         self._id = id
         self._date = date
         self._timeSlots = timeSlots
+        self._movieId = movieId
     }
 
-    // 对外公开的标识符属性
     var id: String {
         return _id
     }
 
-    // 日期的 getter 和 setter
     var date: Date {
         get { return _date }
         set { _date = newValue }
     }
 
-    // 时间段数组的 getter 和 setter
     var timeSlots: [TimeSlot] {
         get { return _timeSlots }
         set { _timeSlots = newValue }
     }
+
+    // Accessor for movieId
+    var movieId: String {
+        return _movieId
+    }
 }
 
+import Foundation
 
-// 单个时间段的放映信息
 class TimeSlot: Identifiable {
     private let _id: String
     private var _startTime: Date
     private var _endTime: Date
     private var _seats: [Seat]
+    private let _sessionId: String  // ID of the session this time slot belongs to
+    private let _movieId: String    // ID of the movie this time slot is showing
 
-    init(id: String, startTime: Date, endTime: Date, seats: [Seat]) {
+    init(id: String, startTime: Date, endTime: Date, seats: [Seat], sessionId: String, movieId: String) {
         self._id = id
         self._startTime = startTime
         self._endTime = endTime
         self._seats = seats
+        self._sessionId = sessionId
+        self._movieId = movieId
     }
 
     var id: String {
@@ -72,5 +76,15 @@ class TimeSlot: Identifiable {
     var seats: [Seat] {
         get { return _seats }
         set { _seats = newValue }
+    }
+
+    // Exposing the session ID publicly
+    var sessionId: String {
+        return _sessionId
+    }
+
+    // Exposing the movie ID publicly
+    var movieId: String {
+        return _movieId
     }
 }

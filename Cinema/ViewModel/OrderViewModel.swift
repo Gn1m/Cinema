@@ -9,24 +9,27 @@ import Foundation
 import Combine
 
 class OrderViewModel: ObservableObject {
-    @Published private(set) var orders: [Order] = []
+    static let shared = OrderViewModel()
     
-    // Add a new order to the list
-    func addOrder(movie: Movie, session: Session, tickets: [Ticket]) {
-        let newOrder = Order(movie: movie, session: session, tickets: tickets)
-        orders.append(newOrder)
+    @Published private(set) var orders: [Order] = []
+
+    // 添加新订单
+    func addOrder(_ order: Order) {
+        orders.append(order)
     }
     
-    // Modify an existing order based on its id
+    // 更新订单
     func updateOrder(id: String, newTickets: [Ticket]) {
         if let index = orders.firstIndex(where: { $0.id == id }) {
-            orders[index] = Order(id: id, movie: orders[index].movie, session: orders[index].session, tickets: newTickets)
+            // Retrieve the current order to access its timeSlot
+            let currentOrder = orders[index]
+            // Update the order with new tickets, keeping other details the same
+            orders[index] = Order(movie: currentOrder.movie, session: currentOrder.session, timeSlot: currentOrder.timeSlot, tickets: newTickets)
         }
     }
 
-    // Remove an order by id
+    // 删除订单
     func removeOrder(id: String) {
         orders.removeAll { $0.id == id }
     }
 }
-
