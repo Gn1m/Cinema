@@ -31,6 +31,7 @@
 		08B65B142BE500FB00CA1B2A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B65B132BE500FB00CA1B2A /* ContentView.swift */; };
 		08B65B162BE500FD00CA1B2A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 08B65B152BE500FD00CA1B2A /* Assets.xcassets */; };
 		08B65B192BE500FD00CA1B2A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 08B65B182BE500FD00CA1B2A /* Preview Assets.xcassets */; };
+		6C1E31222BECC24C00867025 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C1E31212BECC24C00867025 /* Account.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -59,6 +60,7 @@
 		08B65B132BE500FB00CA1B2A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		08B65B152BE500FD00CA1B2A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		08B65B182BE500FD00CA1B2A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		6C1E31212BECC24C00867025 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,7 +131,11 @@
 				0803253E2BE7167B00CE6E2F /* Ticket.swift */,
 				080325402BE716C500CE6E2F /* Seat.swift */,
 				0803255B2BE8709100CE6E2F /* Order.swift */,
+<<<<<<< HEAD
+				6C1E31212BECC24C00867025 /* Account.swift */,
+=======
 				0885511F2BEF5A230090FEA5 /* CinemaModelManager.swift */,
+>>>>>>> 26c717324103e67534bdbadd13c22f5629345dc7
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -251,6 +257,7 @@
 				0803255C2BE8709100CE6E2F /* Order.swift in Sources */,
 				080325472BE7196D00CE6E2F /* SeatSelectionViewModel.swift in Sources */,
 				0803253B2BE714CA00CE6E2F /* Movie.swift in Sources */,
+				6C1E31222BECC24C00867025 /* Account.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
