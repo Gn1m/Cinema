@@ -14,7 +14,8 @@ class CinemaModelManager {
     private var releasedMovies: [ReleasedMovie] = []
     private var comingSoonMovies: [ComingSoonMovie] = []
     private var allSessions: [Session] = []
-
+    private var orders: [Order] = []
+    
     private var hasLoadedMovies = false
 
     private init() {
@@ -56,4 +57,31 @@ class CinemaModelManager {
         public var getComingSoonMovies: [ComingSoonMovie] {
             return comingSoonMovies
         }
+    
+    var allOrders: [Order] {
+            return orders
+        }
+    
+    func addOrder(_ order: Order) {
+            orders.append(order)
+        }
+        
+        
+        func updateOrder(id: String, newTickets: [Ticket]) {
+            if let index = orders.firstIndex(where: { $0.id == id }) {
+                let currentOrder = orders[index]
+                orders[index] = Order(movie: currentOrder.movie, session: currentOrder.session, timeSlot: currentOrder.timeSlot, tickets: newTickets)
+            }
+        }
+        
+        
+        func removeOrder(id: String) {
+            orders.removeAll { $0.id == id }
+        }
+
+        
+    func replaceOrders(with newOrders: [Order]) {
+            orders = newOrders
+        }
+    
 }

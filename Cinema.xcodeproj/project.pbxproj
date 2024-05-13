@@ -25,6 +25,7 @@
 		080EEBC82BEC8A21005E0012 /* ReleasedMovie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080EEBC72BEC8A21005E0012 /* ReleasedMovie.swift */; };
 		080EEBCA2BEC8A7C005E0012 /* ComingSoonMovie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080EEBC92BEC8A7C005E0012 /* ComingSoonMovie.swift */; };
 		080EEBD42BEF4737005E0012 /* OrderDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080EEBD32BEF4737005E0012 /* OrderDetailView.swift */; };
+		085D916E2BF19B8D00F474DB /* TimeSlot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 085D916D2BF19B8D00F474DB /* TimeSlot.swift */; };
 		088551202BEF5A230090FEA5 /* CinemaModelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0885511F2BEF5A230090FEA5 /* CinemaModelManager.swift */; };
 		08916ABB2BEB9288002FA2AD /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08916ABA2BEB9288002FA2AD /* AccountView.swift */; };
 		08B65B122BE500FB00CA1B2A /* CinemaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B65B112BE500FB00CA1B2A /* CinemaApp.swift */; };
@@ -56,6 +57,7 @@
 		080EEBC72BEC8A21005E0012 /* ReleasedMovie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReleasedMovie.swift; sourceTree = "<group>"; };
 		080EEBC92BEC8A7C005E0012 /* ComingSoonMovie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComingSoonMovie.swift; sourceTree = "<group>"; };
 		080EEBD32BEF4737005E0012 /* OrderDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderDetailView.swift; sourceTree = "<group>"; };
+		085D916D2BF19B8D00F474DB /* TimeSlot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeSlot.swift; sourceTree = "<group>"; };
 		0885511F2BEF5A230090FEA5 /* CinemaModelManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CinemaModelManager.swift; sourceTree = "<group>"; };
 		08916ABA2BEB9288002FA2AD /* AccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountView.swift; sourceTree = "<group>"; };
 		08B65B0E2BE500FB00CA1B2A /* Cinema.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cinema.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -134,6 +136,7 @@
 				080EEBC72BEC8A21005E0012 /* ReleasedMovie.swift */,
 				080EEBC92BEC8A7C005E0012 /* ComingSoonMovie.swift */,
 				0803253C2BE7150E00CE6E2F /* Session.swift */,
+				085D916D2BF19B8D00F474DB /* TimeSlot.swift */,
 				0803253E2BE7167B00CE6E2F /* Ticket.swift */,
 				080325402BE716C500CE6E2F /* Seat.swift */,
 				0803255B2BE8709100CE6E2F /* Order.swift */,
@@ -251,6 +254,7 @@
 				080325492BE71B4300CE6E2F /* SampleMoviesProvider.swift in Sources */,
 				080325412BE716C500CE6E2F /* Seat.swift in Sources */,
 				080325432BE7189F00CE6E2F /* ContentViewModel.swift in Sources */,
+				085D916E2BF19B8D00F474DB /* TimeSlot.swift in Sources */,
 				0803254F2BE72DFD00CE6E2F /* MovieDetailView.swift in Sources */,
 				6CA9E1F62BEFB11100BC5E80 /* AccountController.swift in Sources */,
 				080EEBC42BEC608D005E0012 /* MovieCardView.swift in Sources */,

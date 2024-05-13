@@ -15,8 +15,8 @@ struct AccountView: View {
             VStack(spacing: 20) {
                 Text(controller.currentUser == nil ? "Hello Guest" : "Hello \(controller.currentUser!.username)")
                     .font(.largeTitle)
-                    .padding()
-                
+                                .padding()
+                            
                 Spacer()
 
                 if controller.currentUser != nil {

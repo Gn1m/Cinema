@@ -103,7 +103,7 @@ class SeatSelectionViewModel: ObservableObject {
 
         // Create and add the order with the correct time slot
         let newOrder = Order(movie: movie, session: session, timeSlot: currentTimeSlot, tickets: tickets)
-        OrderViewModel.shared.addOrder(newOrder)
+        CinemaModelManager.shared.addOrder(newOrder)
     }
 
 
