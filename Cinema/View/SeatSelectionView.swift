@@ -1,19 +1,23 @@
 import SwiftUI
 
+// View to handle seat selection for a movie
 struct SeatSelectionView: View {
-    @StateObject private var viewModel: SeatSelectionViewModel
-    @State private var navigateToMainView = false
-    private let allTimeSlots: [TimeSlot]
+    @StateObject private var viewModel: SeatSelectionViewModel // ViewModel to manage state and business logic
+    @State private var navigateToMainView = false // State to control navigation to the main view
+    private let allTimeSlots: [TimeSlot] // All available time slots for the movie
 
+    // Initializer to set the initial time slot and all available time slots
     init(initialTimeSlot: TimeSlot, allTimeSlots: [TimeSlot]) {
         _viewModel = StateObject(wrappedValue: SeatSelectionViewModel(initialTimeSlot: initialTimeSlot))
         self.allTimeSlots = allTimeSlots
     }
 
+    // Computed property to get unique seat rows
     private var rows: [String] {
         Set(viewModel.seats.map { $0.row }).sorted()
     }
 
+    // Computed property to get seat columns
     private var columns: [Int] {
         let maxNumber = viewModel.seats.map { $0.number }.max() ?? 0
         return Array(1...maxNumber)
@@ -21,7 +25,7 @@ struct SeatSelectionView: View {
 
     var body: some View {
         VStack {
-            // Ticket selection
+            // Ticket selection section
             VStack(alignment: .leading, spacing: 10) {
                 Text("Select Tickets")
                     .font(.headline)
@@ -51,13 +55,13 @@ struct SeatSelectionView: View {
             Divider()
                 .padding(.vertical, 8)
 
-            // Front of Screen label
+            // Label indicating front of the screen
             Text("Front of Screen")
                 .font(.headline)
                 .bold()
                 .padding(.bottom, 8)
 
-            // Grid layout for seats
+            // Grid layout for seat selection
             HStack(alignment: .top) {
                 // Row labels on the left
                 VStack(alignment: .trailing) {
@@ -104,7 +108,7 @@ struct SeatSelectionView: View {
                     .padding(.horizontal, 16)
             }
 
-            // Proceed button that reserves and navigates
+            // Proceed button to reserve seats and navigate
             Button("Proceed") {
                 if viewModel.isSeatSelectionValid() {
                     viewModel.reserveSelectedSeats()
@@ -128,7 +132,9 @@ struct SeatSelectionView: View {
             }
         }
         .onAppear {
+            // Load existing reservations when the view appears
             viewModel.loadReservations()
         }
     }
 }
+

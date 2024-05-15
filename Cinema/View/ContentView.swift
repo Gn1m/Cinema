@@ -7,16 +7,17 @@
 
 import SwiftUI
 
+// Main ContentView
 struct ContentView: View {
-    @StateObject private var viewModel = ContentViewModel()
-    @State private var navigateToOrders = false
-    @State private var navigateToAccount = false
+    @StateObject private var viewModel = ContentViewModel() // ViewModel instance to manage the state and business logic
+    @State private var navigateToOrders = false // State to control navigation to Orders view
+    @State private var navigateToAccount = false // State to control navigation to Account view
     
     var body: some View {
         NavigationView {
             NavigationStack {
                 VStack {
-                    // Switch between Now Showing and Coming Soon
+                    // Picker that to switch between Now Showing and Coming Soon categories
                     Picker("Category", selection: $viewModel.selectedCategory) {
                         Text("Now Showing").tag(ContentViewModel.MovieCategory.nowShowing)
                         Text("Coming Soon").tag(ContentViewModel.MovieCategory.comingSoon)
@@ -24,15 +25,16 @@ struct ContentView: View {
                     .pickerStyle(SegmentedPickerStyle())
                     .padding(.horizontal)
                     .onChange(of: viewModel.selectedCategory) { newCategory in
+                        // Update the movies displayed based on the selected category
                         viewModel.updateSelectedMovies(category: newCategory)
                     }
                     
-                    // Movie cards
+                    // Horizontal ScrollView to display movie cards
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 16) {
                             ForEach(viewModel.selectedMovies, id: \.id) { movie in
                                 NavigationLink(destination: MovieDetailView(movie: movie)) {
-                                    MovieCardView(movie: movie)
+                                    MovieCardView(movie: movie) // Custom view to display a movie card
                                 }
                             }
                         }
@@ -41,15 +43,16 @@ struct ContentView: View {
                     .navigationTitle("Movies")
                     .toolbar {
                         ToolbarItem(placement: .navigationBarTrailing) {
+                            // Menu button with options to navigate to Orders and Account views
                             Menu {
                                 Button(action: {
-                                    navigateToOrders = true
+                                    navigateToOrders = true // Set to true to trigger navigation to Orders view
                                 }) {
                                     Label("Orders", systemImage: "cart")
                                 }
                                 
                                 Button(action: {
-                                    navigateToAccount = true
+                                    navigateToAccount = true // Set to true to trigger navigation to Account view
                                 }) {
                                     Label("Account", systemImage: "person.crop.circle")
                                 }
@@ -59,7 +62,7 @@ struct ContentView: View {
                         }
                     }
                     
-                    // Navigation to Orders and Account
+                    // Invisible NavigationLinks to trigger programmatic navigation
                     NavigationLink(destination: OrdersView(), isActive: $navigateToOrders) { EmptyView() }
                         .frame(width: 0, height: 0)
                     
@@ -70,6 +73,7 @@ struct ContentView: View {
         }
     }
     
+    // Preview provider for the ContentView
     struct ContentView_Previews: PreviewProvider {
         static var previews: some View {
             ContentView()
