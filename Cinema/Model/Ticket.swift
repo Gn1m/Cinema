@@ -12,19 +12,18 @@ enum TicketType: String, Hashable {
 }
 
 class Ticket: Identifiable, Hashable {
-    let id = UUID()  // Unique identifier for each ticket
+    let id = UUID()
     let type: TicketType
     let quantity: Int
     let price: Double
     let seatID: String
 
     init(type: TicketType, quantity: Int, price: Double, seatID: String) {
-            self.type = type
-            self.quantity = quantity
-            self.price = price
-            self.seatID = seatID
-        }
-
+        self.type = type
+        self.quantity = quantity
+        self.price = price
+        self.seatID = seatID
+    }
 
     static func == (lhs: Ticket, rhs: Ticket) -> Bool {
         lhs.id == rhs.id

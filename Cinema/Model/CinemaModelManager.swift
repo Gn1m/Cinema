@@ -15,7 +15,7 @@ class CinemaModelManager {
     private var comingSoonMovies: [ComingSoonMovie] = []
     private var allSessions: [Session] = []
     private var orders: [Order] = []
-    
+
     private var hasLoadedMovies = false
 
     private init() {
@@ -26,7 +26,7 @@ class CinemaModelManager {
         if !hasLoadedMovies {
             releasedMovies = SampleMoviesProvider.getReleasedMovies()
             comingSoonMovies = SampleMoviesProvider.getComingSoonMovies()
-            allMovies = releasedMovies + comingSoonMovies as [Movie]
+            allMovies = releasedMovies + comingSoonMovies
 
             // Flatten all sessions from released movies for easy access by ID
             allSessions = releasedMovies.flatMap { $0.sessions }
@@ -44,44 +44,61 @@ class CinemaModelManager {
 
     func updateMovies(movies: [ReleasedMovie]) {
         self.releasedMovies = movies
-        self.allMovies = releasedMovies + comingSoonMovies as [Movie]
+        self.allMovies = releasedMovies + comingSoonMovies
         self.allSessions = releasedMovies.flatMap { $0.sessions }
     }
-    
-    // Public getter for released movies
-        public var getReleasedMovies: [ReleasedMovie] {
-            return releasedMovies
-        }
 
-        // Public getter for coming soon movies
-        public var getComingSoonMovies: [ComingSoonMovie] {
-            return comingSoonMovies
-        }
-    
+    public var getReleasedMovies: [ReleasedMovie] {
+        return releasedMovies
+    }
+
+    public var getComingSoonMovies: [ComingSoonMovie] {
+        return comingSoonMovies
+    }
+
+    public var getAllSessions: [Session] { // Added public getter for allSessions
+        return allSessions
+    }
+
     var allOrders: [Order] {
-            return orders
-        }
-    
-    func addOrder(_ order: Order) {
-            orders.append(order)
-        }
-        
-        
-        func updateOrder(id: String, newTickets: [Ticket]) {
-            if let index = orders.firstIndex(where: { $0.id == id }) {
-                let currentOrder = orders[index]
-                orders[index] = Order(movie: currentOrder.movie, session: currentOrder.session, timeSlot: currentOrder.timeSlot, tickets: newTickets)
-            }
-        }
-        
-        
-        func removeOrder(id: String) {
-            orders.removeAll { $0.id == id }
-        }
+        return orders
+    }
 
-        
-    func replaceOrders(with newOrders: [Order]) {
-            orders = newOrders
+    func addOrder(_ order: Order) {
+        orders.append(order)
+    }
+
+    func updateOrder(id: String, newTickets: [Ticket]) {
+        if let index = orders.firstIndex(where: { $0.id == id }) {
+            let currentOrder = orders[index]
+            orders[index] = Order(movie: currentOrder.movie, session: currentOrder.session, timeSlot: currentOrder.timeSlot, tickets: newTickets)
         }
-    
+    }
+
+    func removeOrder(id: String) {
+        orders.removeAll { $0.id == id }
+    }
+
+    func replaceOrders(with newOrders: [Order]) {
+        orders = newOrders
+    }
+
+    // Manage sessions
+    func addSession(_ session: Session) {
+        allSessions.append(session)
+    }
+
+    func updateSession(id: String, newTimeSlots: [TimeSlot]) {
+        if let index = allSessions.firstIndex(where: { $0.id == id }) {
+            allSessions[index].timeSlots = newTimeSlots
+        }
+    }
+
+    func removeSession(id: String) {
+        allSessions.removeAll { $0.id == id }
+    }
+
+    func replaceSessions(with newSessions: [Session]) {
+        allSessions = newSessions
+    }
 }

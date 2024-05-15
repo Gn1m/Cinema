@@ -12,8 +12,8 @@ class TimeSlot: Identifiable {
     private var _startTime: Date
     private var _endTime: Date
     private var _seats: [Seat]
-    private let _sessionId: String  // ID of the session this time slot belongs to
-    private let _movieId: String    // ID of the movie this time slot is showing
+    private let _sessionId: String
+    private let _movieId: String
 
     init(id: String, startTime: Date, endTime: Date, seats: [Seat], sessionId: String, movieId: String) {
         self._id = id
@@ -43,14 +43,11 @@ class TimeSlot: Identifiable {
         set { _seats = newValue }
     }
 
-    // Exposing the session ID publicly
     var sessionId: String {
         return _sessionId
     }
 
-    // Exposing the movie ID publicly
     var movieId: String {
         return _movieId
     }
 }
-

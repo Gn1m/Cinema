@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct OrdersView: View {
-    @ObservedObject var viewModel = OrderViewModel.shared  // Use the singleton instance
+    @ObservedObject var viewModel = OrderViewModel.shared
 
     var body: some View {
         NavigationView {
@@ -19,7 +19,7 @@ struct OrdersView: View {
                         .padding()
                 } else {
                     ForEach(viewModel.orders, id: \.id) { order in
-                        NavigationLink(destination: OrderDetailView(order: order)) {
+                        NavigationLink(destination: OrderDetailView(orderID: order.id)) {
                             VStack(alignment: .leading) {
                                 Text(order.movie.name)
                                     .font(.headline)

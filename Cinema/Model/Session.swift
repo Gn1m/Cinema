@@ -11,7 +11,7 @@ class Session: Identifiable {
     private let _id: String
     private var _date: Date
     private var _timeSlots: [TimeSlot]
-    private let _movieId: String  // Storing the ID of the movie associated with the session
+    private let _movieId: String
 
     init(id: String, date: Date, timeSlots: [TimeSlot], movieId: String) {
         self._id = id
@@ -34,9 +34,7 @@ class Session: Identifiable {
         set { _timeSlots = newValue }
     }
 
-    // Accessor for movieId
     var movieId: String {
         return _movieId
     }
 }
-
