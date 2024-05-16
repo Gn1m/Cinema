@@ -8,20 +8,27 @@
 
 import SwiftUI
 
+/// View for selecting seats for a specific movie screening.
 struct SeatSelectionView: View {
-    @StateObject private var viewModel: SeatSelectionViewModel
-    @State private var navigateToMainView = false
-    private let allTimeSlots: [TimeSlot]
+    @StateObject private var viewModel: SeatSelectionViewModel // ViewModel handling seat selection logic.
+    @State private var navigateToMainView = false // State to control navigation back to the main view.
+    private let allTimeSlots: [TimeSlot] // All available time slots for the session.
 
+    /// Initializes the view with a specific time slot ID and all available time slots.
+    /// - Parameters:
+    ///   - timeSlotID: The ID of the selected time slot.
+    ///   - allTimeSlots: All time slots available for the session.
     init(timeSlotID: String, allTimeSlots: [TimeSlot]) {
         _viewModel = StateObject(wrappedValue: SeatSelectionViewModel(timeSlotID: timeSlotID))
         self.allTimeSlots = allTimeSlots
     }
 
+    /// Computes unique rows from the seats provided by the ViewModel.
     private var rows: [String] {
         Set(viewModel.seats.map { $0.row }).sorted()
     }
 
+    /// Computes the maximum column number from the seats to create a grid.
     private var columns: [Int] {
         let maxNumber = viewModel.seats.map { $0.number }.max() ?? 0
         return Array(1...maxNumber)
@@ -29,6 +36,7 @@ struct SeatSelectionView: View {
 
     var body: some View {
         VStack {
+            // Section for selecting the number of tickets.
             VStack(alignment: .leading, spacing: 10) {
                 Text("Select Tickets")
                     .font(.headline)
@@ -47,6 +55,7 @@ struct SeatSelectionView: View {
                     }
                 }
 
+                // Displays the total price of selected tickets.
                 Text("Total Price: $\(viewModel.totalPrice, specifier: "%.2f")")
                     .font(.subheadline)
                     .bold()
@@ -58,11 +67,13 @@ struct SeatSelectionView: View {
             Divider()
                 .padding(.vertical, 8)
 
+            // Label indicating the orientation of the screen.
             Text("Front of Screen")
                 .font(.headline)
                 .bold()
                 .padding(.bottom, 8)
 
+            // Layout for seat selection using dynamically generated rows and columns.
             HStack(alignment: .top) {
                 VStack(alignment: .trailing) {
                     ForEach(rows, id: \.self) { row in
@@ -97,6 +108,7 @@ struct SeatSelectionView: View {
             }
             .padding()
 
+            // Error message display.
             if let errorMessage = viewModel.errorMessage {
                 Text(errorMessage)
                     .foregroundColor(.red)
@@ -105,6 +117,7 @@ struct SeatSelectionView: View {
                     .padding(.horizontal, 16)
             }
 
+            // Button to proceed after seat selection, leading to navigation to the main view.
             Button("Proceed") {
                 if viewModel.isSeatSelectionValid() {
                     viewModel.reserveSelectedSeats()
@@ -114,11 +127,11 @@ struct SeatSelectionView: View {
                 }
             }
             .padding()
-            .background(viewModel.isSeatSelectionValid() ? Color.black : Color.gray)
+            .background($viewModel.isSeatSelectionValid ? Color.black : Color.gray)
             .foregroundColor(.white)
             .cornerRadius(10)
             .padding(.top, 8)
-            .disabled(!viewModel.isSeatSelectionValid())
+            .disabled(!$viewModel.isSeatSelectionValid)
 
             NavigationLink(destination: ContentView()
                             .navigationBarBackButtonHidden(true),
@@ -127,7 +140,8 @@ struct SeatSelectionView: View {
             }
         }
         .onAppear {
-            viewModel.reloadSession(timeSlotID: viewModel.currentTimeSlot.id)
+            // Reload the session data when the view appears.
+            $viewModel.reloadSession(timeSlotID: viewModel.currentTimeSlot.id)
         }
     }
 }

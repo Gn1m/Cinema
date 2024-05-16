@@ -6,23 +6,26 @@
 
 import Foundation
 
-// ReleasedMovie inherits from Movie and adds sessions information
+/// Represents a movie that has been released and includes session information.
 class ReleasedMovie: Movie {
-    private var _sessions: [Session]
+    private var _sessions: [Session] // Internal storage for the list of sessions associated with the movie.
 
-    // Initializer with sessions as an additional parameter
+    /// Initializes a new released movie with session details.
+    /// - Parameters:
+    ///   - id: Unique identifier for the movie.
+    ///   - name: Name of the movie.
+    ///   - description: Description of the movie.
+    ///   - sessions: Array of session objects detailing when and where the movie is being shown.
+    ///   - trailerLink: Optional URL for the movie's trailer.
+    ///   - imageURL: Optional URL for the movie's image.
     init(id: String, name: String, description: String, sessions: [Session], trailerLink: URL? = nil, imageURL: URL? = nil) {
-        self._sessions = sessions
+        self._sessions = sessions // Initializing sessions for the released movie.
         super.init(id: id, name: name, description: description, trailerLink: trailerLink, imageURL: imageURL)
     }
 
-    // Computed property for sessions
+    /// Public accessors and mutators for the movie's sessions.
     var sessions: [Session] {
-        get {
-            return _sessions
-        }
-        set {
-            _sessions = newValue
-        }
+        get { _sessions }
+        set { _sessions = newValue }
     }
 }

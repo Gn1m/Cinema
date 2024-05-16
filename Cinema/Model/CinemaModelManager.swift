@@ -8,25 +8,25 @@
 import Foundation
 import Combine
 
-/// Model manager for managing cinema data
+/// Manages the data related to cinema operations including movies, sessions, and orders.
 class CinemaModelManager: ObservableObject {
-    static let shared = CinemaModelManager()
+    static let shared = CinemaModelManager()  // Singleton instance of the CinemaModelManager.
 
-    private var allMovies: [Movie] = []
-    private var releasedMovies: [ReleasedMovie] = []
-    private var comingSoonMovies: [ComingSoonMovie] = []
-    private var allSessions: [Session] = []
-    @Published private(set) var currentAccount: AccountModel?
-    private var orders: [Order] = []
+    private var allMovies: [Movie] = []  // All movies, both released and upcoming.
+    private var releasedMovies: [ReleasedMovie] = []  // Movies that have already been released.
+    private var comingSoonMovies: [ComingSoonMovie] = []  // Movies that are scheduled for future release.
+    private var allSessions: [Session] = []  // All movie sessions available.
+    @Published private(set) var currentAccount: AccountModel?  // The currently logged-in account.
+    private var orders: [Order] = []  // All orders made.
 
-    private var hasLoadedMovies = false
+    private var hasLoadedMovies = false  // Flag to check if movies have been loaded.
 
-    /// Initializer to load initial data
+    /// Initializes and loads initial data.
     private init() {
         loadMovies()
     }
 
-    /// Method to load movies from the sample provider
+    /// Loads movies from a sample provider.
     private func loadMovies() {
         if !hasLoadedMovies {
             releasedMovies = SampleMoviesProvider.getReleasedMovies()
@@ -39,49 +39,49 @@ class CinemaModelManager: ObservableObject {
         }
     }
 
-    /// Method to get a movie by its ID
+    /// Retrieves a movie by its ID.
     func movie(forID id: String) -> Movie? {
         return allMovies.first { $0.id == id }
     }
 
-    /// Method to get a session by its ID
+    /// Retrieves a session by its ID.
     func session(forID id: String) -> Session? {
         return allSessions.first { $0.id == id }
     }
 
-    /// Method to update the list of movies
+    /// Updates the list of movies.
     func updateMovies(movies: [ReleasedMovie]) {
         self.releasedMovies = movies
         self.allMovies = releasedMovies + comingSoonMovies
         self.allSessions = releasedMovies.flatMap { $0.sessions }
     }
 
-    /// Computed property to get released movies
+    /// Returns released movies.
     public var getReleasedMovies: [ReleasedMovie] {
         return releasedMovies
     }
 
-    /// Computed property to get coming soon movies
+    /// Returns movies that are coming soon.
     public var getComingSoonMovies: [ComingSoonMovie] {
         return comingSoonMovies
     }
 
-    /// Computed property to get all sessions
+    /// Returns all sessions.
     public var getAllSessions: [Session] {
         return allSessions
     }
 
-    /// Computed property to get all orders
+    /// Returns all orders.
     var allOrders: [Order] {
         return orders
     }
 
-    /// Method to add a new order
+    /// Adds a new order.
     func addOrder(_ order: Order) {
         orders.append(order)
     }
 
-    /// Method to update an existing order
+    /// Updates an existing order with new tickets.
     func updateOrder(id: String, newTickets: [Ticket]) {
         if let index = orders.firstIndex(where: { $0.id == id }) {
             let currentOrder = orders[index]
@@ -89,50 +89,50 @@ class CinemaModelManager: ObservableObject {
         }
     }
 
-    /// Method to remove an order by its ID
+    /// Removes an order by its ID.
     func removeOrder(id: String) {
         orders.removeAll { $0.id == id }
     }
 
-    /// Method to replace the list of orders
+    /// Replaces the current list of orders with a new one.
     func replaceOrders(with newOrders: [Order]) {
         orders = newOrders
     }
 
-    /// Method to add a new session
+    /// Adds a new session.
     func addSession(_ session: Session) {
         allSessions.append(session)
     }
 
-    /// Method to update an existing session
+    /// Updates an existing session with new time slots.
     func updateSession(id: String, newTimeSlots: [TimeSlot]) {
         if let index = allSessions.firstIndex(where: { $0.id == id }) {
             allSessions[index].timeSlots = newTimeSlots
         }
     }
 
-    /// Method to remove a session by its ID
+    /// Removes a session by its ID.
     func removeSession(id: String) {
         allSessions.removeAll { $0.id == id }
     }
 
-    /// Method to replace the list of sessions
+    /// Replaces the current list of sessions with a new one.
     func replaceSessions(with newSessions: [Session]) {
         allSessions = newSessions
     }
 
-    /// Method to log in with an account
+    /// Logs in with a specified account.
     func login(account: AccountModel) {
         self.currentAccount = account
     }
 
-    /// Method to log out
+    /// Logs out the current user and removes their orders.
     func logout() {
         self.currentAccount = nil
-        orders.removeAll { $0.account != nil } // Remove all orders associated with an account
+        orders.removeAll { $0.account != nil }  // Remove all orders associated with an account
     }
 
-    /// Computed property to get orders of the current account
+    /// Retrieves orders made by the currently logged-in account.
     var currentAccountOrders: [Order] {
         if let account = currentAccount {
             return orders.filter { $0.account?.account == account.account }

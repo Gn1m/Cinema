@@ -7,19 +7,21 @@
 
 import SwiftUI
 
+/// View for registering a new user account with fields for username, account, email, and password.
 struct SignUpView: View {
-    @EnvironmentObject var controller: AccountController
-    @Environment(\.presentationMode) var presentationMode
-    @State private var username = ""
-    @State private var account = ""
-    @State private var email = ""
-    @State private var password = ""
-    @State private var confirmPassword = ""
-    @State private var showError = false
-    @State private var errorMessage = ""
+    @EnvironmentObject var controller: AccountController // Access the shared AccountController instance.
+    @Environment(\.presentationMode) var presentationMode // Access to dismiss the view.
+    @State private var username = "" // State for username input.
+    @State private var account = "" // State for account input.
+    @State private var email = "" // State for email input.
+    @State private var password = "" // State for password input.
+    @State private var confirmPassword = "" // State for confirming password.
+    @State private var showError = false // State to control error message visibility.
+    @State private var errorMessage = "" // State to store and display the error message.
 
     var body: some View {
         VStack {
+            // Input fields for user data.
             TextField("Username", text: $username)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
@@ -39,7 +41,8 @@ struct SignUpView: View {
             SecureField("Confirm Password", text: $confirmPassword)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
-            
+
+            // Display error message if there is an error.
             if showError {
                 Text(errorMessage)
                     .font(.caption)
@@ -47,6 +50,7 @@ struct SignUpView: View {
                     .padding(.top, 5)
             }
 
+            // Button to initiate the sign-up process.
             Button("Sign Up") {
                 if validateInputs() {
                     if let error = controller.signUp(username: username, account: account, email: email, password: password) {
@@ -67,6 +71,8 @@ struct SignUpView: View {
         .navigationBarTitle("Sign Up")
     }
 
+    /// Validates the inputs before attempting to sign up.
+    /// Returns `true` if all validations pass, otherwise `false`.
     func validateInputs() -> Bool {
         if username.isEmpty || account.isEmpty || email.isEmpty || password.isEmpty || confirmPassword.isEmpty {
             errorMessage = "All fields are required"
@@ -87,7 +93,7 @@ struct SignUpView: View {
         }
 
         if !Validator.isValidPassword(password) {
-            errorMessage = "Password must be 6 digis and contain at least one uppercase letter and one lowercase letter"
+            errorMessage = "Password must be 6 digits and contain at least one uppercase letter and one lowercase letter"
             showError = true
             return false
         }
@@ -97,6 +103,7 @@ struct SignUpView: View {
     }
 }
 
+/// Preview provider to assist in designing and testing the SignUpView.
 struct SignUpView_Previews: PreviewProvider {
     static var previews: some View {
         SignUpView()

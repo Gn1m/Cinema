@@ -8,10 +8,12 @@
 import SwiftUI
 import UIKit
 
+/// A view to detail the selected order, providing comprehensive information and actions like cancellation.
 struct OrderDetailView: View {
-    @EnvironmentObject var orderVM: OrderViewModel
-    let orderID: String
+    @EnvironmentObject var orderVM: OrderViewModel // Use the shared Order ViewModel.
+    let orderID: String // ID for the order to be detailed.
 
+    /// Retrieves the order based on the ID from the ViewModel.
     var order: Order? {
         orderVM.orders.first { $0.id == orderID }
     }
@@ -20,17 +22,27 @@ struct OrderDetailView: View {
         ScrollView {
             if let order = order {
                 VStack(alignment: .leading, spacing: 20) {
+                    // Movie title
                     Text("Movie: \(order.movie.name)")
                         .font(.title)
+                    
+                    // Unique identifier for the order
                     Text("Order ID: \(order.id)")
                         .font(.headline)
+                    
+                    // Session date and time details
                     Text("Ordered Time: \(order.session.date.formatted())")
                         .font(.headline)
+                    
+                    // Time slot details showing start and end times
                     Text("Time Slot: \(order.timeSlot.startTime.formatted()) to \(order.timeSlot.endTime.formatted())")
                         .font(.headline)
+                    
+                    // Status of the order, e.g., confirmed or cancelled
                     Text("Order Status: \(order.status.rawValue)")
                         .font(.headline)
 
+                    // Show who purchased the order
                     if let account = order.account {
                         Text("Purchased by: \(account.username) (\(account.email))")
                             .font(.subheadline)
@@ -39,8 +51,10 @@ struct OrderDetailView: View {
                             .font(.subheadline)
                     }
 
+                    // Show tickets with details in a structured view
                     ticketDetailsView(order: order)
 
+                    // Generate and display a barcode for the order ID
                     if let barcodeImage = generateBarcode(from: order.id) {
                         Image(uiImage: barcodeImage)
                             .resizable()
@@ -50,6 +64,7 @@ struct OrderDetailView: View {
                             .padding(.top, 20)
                     }
 
+                    // Button to cancel the order if applicable
                     if order.status != .cancelled {
                         Button("Cancel Order") {
                             orderVM.cancelOrder(id: order.id)
@@ -72,6 +87,7 @@ struct OrderDetailView: View {
         }
     }
 
+    /// Subview to display ticket details for each ticket in the order.
     private func ticketDetailsView(order: Order) -> some View {
         VStack(alignment: .leading, spacing: 10) {
             ForEach(order.tickets, id: \.id) { ticket in
@@ -80,13 +96,14 @@ struct OrderDetailView: View {
         }
     }
 
+    /// Generates a barcode image from a string using Core Image filters.
     private func generateBarcode(from string: String) -> UIImage? {
         let data = string.data(using: String.Encoding.ascii)
         if let filter = CIFilter(name: "CICode128BarcodeGenerator") {
             filter.setValue(data, forKey: "inputMessage")
             if let output = filter.outputImage {
-                let scaleX = 3.0
-                let scaleY = 3.0
+                let scaleX = 3.0 // Increase barcode width
+                let scaleY = 3.0 // Increase barcode height
                 let transformedImage = output.transformed(by: CGAffineTransform(scaleX: CGFloat(scaleX), y: CGFloat(scaleY)))
                 return UIImage(ciImage: transformedImage)
             }
@@ -95,9 +112,9 @@ struct OrderDetailView: View {
     }
 }
 
+/// Preview provider to help visualize the layout in Xcode's canvas.
 struct OrderDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        // Sample order for preview
         let sampleMovie = Movie(id: "1", name: "Sample Movie", description: "Sample Description", trailerLink: nil, imageURL: nil)
         let sampleSession = Session(id: "1", date: Date(), timeSlots: [], movieId: "1")
         let sampleTimeSlot = TimeSlot(id: "1", startTime: Date(), endTime: Date(), seats: [], sessionId: "1", movieId: "1")

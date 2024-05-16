@@ -8,7 +8,7 @@
 // CinemaApp.swift
 import SwiftUI
 
-@main
+ @main
 struct CinemaApp: App {
     var body: some Scene {
         WindowGroup {

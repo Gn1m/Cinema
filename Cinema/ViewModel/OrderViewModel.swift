@@ -8,36 +8,40 @@
 import Foundation
 import Combine
 
-/// ViewModel for managing orders
+/// ViewModel for managing movie orders.
 class OrderViewModel: ObservableObject {
     static let shared = OrderViewModel()
 
-    /// Published property to hold the list of orders
     @Published private(set) var orders: [Order] = []
 
-    /// Initializer to fetch initial orders
+    /// Initializes the ViewModel by fetching initial orders.
     init() {
         fetchOrders()
     }
 
-    /// Method to fetch orders from the model manager
+    /// Fetches orders from the model manager and updates the published orders property.
     func fetchOrders() {
         orders = CinemaModelManager.shared.currentAccountOrders
     }
 
-    /// Method to add a new order
+    /// Adds a new order and refreshes the list of orders.
+    /// - Parameter order: The new order to be added.
     func addOrder(_ order: Order) {
         CinemaModelManager.shared.addOrder(order)
         fetchOrders()
     }
 
-    /// Method to update an existing order
+    /// Updates an existing order with new tickets and refreshes the orders list.
+    /// - Parameters:
+    ///   - id: The identifier of the order to update.
+    ///   - newTickets: The new tickets to update the order with.
     func updateOrder(id: String, newTickets: [Ticket]) {
         CinemaModelManager.shared.updateOrder(id: id, newTickets: newTickets)
         fetchOrders()
     }
 
-    /// Method to cancel an existing order
+    /// Cancels an order and updates seat availability and order status accordingly.
+    /// - Parameter id: The identifier of the order to cancel.
     func cancelOrder(id: String) {
         guard let orderIndex = orders.firstIndex(where: { $0.id == id }) else {
             print("Order not found.")
@@ -46,26 +50,26 @@ class OrderViewModel: ObservableObject {
 
         var order = orders[orderIndex]
         let timeSlot = order.timeSlot
-
-        // Update seat status to available
-        for ticket in order.tickets {
-            if let sessionIndex = CinemaModelManager.shared.getAllSessions.firstIndex(where: { $0.id == order.session.id }) {
-                if let timeSlotIndex = CinemaModelManager.shared.getAllSessions[sessionIndex].timeSlots.firstIndex(where: { $0.id == timeSlot.id }) {
-                    if let seatIndex = CinemaModelManager.shared.getAllSessions[sessionIndex].timeSlots[timeSlotIndex].seats.firstIndex(where: { $0.id == ticket.seatID }) {
-                        CinemaModelManager.shared.getAllSessions[sessionIndex].timeSlots[timeSlotIndex].seats[seatIndex].status = .available
-                    }
-                }
-            }
-        }
-
-        // Update order status to cancelled
+        updateSeatsAsAvailable(for: order)
         order.updateStatus(newStatus: .cancelled)
-        orders[orderIndex] = order  // Keep the local cache in sync
+        orders[orderIndex] = order  // Update local cache
 
         CinemaModelManager.shared.replaceOrders(with: orders)
-        fetchOrders()  // Re-fetch orders to ensure UI is in sync
+        fetchOrders()  // Refresh local orders
 
-        // Notify SeatSelectionViewModel to update seat statuses
+        // Notify other components to update their views.
         NotificationCenter.default.post(name: .seatStatusUpdated, object: nil, userInfo: ["timeSlotID": timeSlot.id])
+    }
+
+    /// Updates seat statuses to available in the Cinema Model Manager.
+    /// - Parameter order: The order whose seats need to be made available.
+    private func updateSeatsAsAvailable(for order: Order) {
+        for ticket in order.tickets {
+            if let sessionIndex = CinemaModelManager.shared.getAllSessions.firstIndex(where: { $0.id == order.session.id }),
+               let timeSlotIndex = CinemaModelManager.shared.getAllSessions[sessionIndex].timeSlots.firstIndex(where: { $0.id == order.timeSlot.id }),
+               let seatIndex = CinemaModelManager.shared.getAllSessions[sessionIndex].timeSlots[timeSlotIndex].seats.firstIndex(where: { $0.id == ticket.seatID }) {
+                CinemaModelManager.shared.getAllSessions[sessionIndex].timeSlots[timeSlotIndex].seats[seatIndex].status = .available
+            }
+        }
     }
 }
