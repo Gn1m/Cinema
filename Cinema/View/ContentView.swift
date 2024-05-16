@@ -1,5 +1,5 @@
 //
-//  MovieDetailView.swift
+//  ContentView.swift
 //  Cinema
 //
 //  Created by Ming Z on 5/5/2024.
@@ -9,11 +9,12 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject private var viewModel = ContentViewModel()
+    @StateObject private var accountController = AccountController.shared
     @State private var navigateToOrders = false
     @State private var navigateToAccount = false
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
                 Picker("Category", selection: $viewModel.selectedCategory) {
                     Text("Now Showing").tag(ContentViewModel.MovieCategory.nowShowing)
@@ -57,9 +58,10 @@ struct ContentView: View {
                 }
 
                 NavigationLink(destination: OrdersView(), isActive: $navigateToOrders) { EmptyView() }
-                NavigationLink(destination: AccountView(), isActive: $navigateToAccount) { EmptyView() }
+                NavigationLink(destination: AccountView().environmentObject(accountController), isActive: $navigateToAccount) { EmptyView() }
             }
         }
+        .environmentObject(accountController)  // Set AccountController as environment object
     }
 }
 

@@ -1,12 +1,12 @@
+// TimeSlot.swift
+// Cinema
 //
-//  TimeSlot.swift
-//  Cinema
-//
-//  Created by Ming Z on 13/5/2024.
+// Created by Ming Z on 13/5/2024.
 //
 
 import Foundation
 
+// TimeSlot class represents a specific timeslot within a session
 class TimeSlot: Identifiable {
     private let _id: String
     private var _startTime: Date
@@ -15,6 +15,7 @@ class TimeSlot: Identifiable {
     private let _sessionId: String
     private let _movieId: String
 
+    // Initializer for TimeSlot
     init(id: String, startTime: Date, endTime: Date, seats: [Seat], sessionId: String, movieId: String) {
         self._id = id
         self._startTime = startTime
@@ -24,6 +25,7 @@ class TimeSlot: Identifiable {
         self._movieId = movieId
     }
 
+    // Computed properties for encapsulating the private variables
     var id: String {
         return _id
     }

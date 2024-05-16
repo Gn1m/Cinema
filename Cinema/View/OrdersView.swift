@@ -11,7 +11,7 @@ struct OrdersView: View {
     @ObservedObject var viewModel = OrderViewModel.shared
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             List {
                 if viewModel.orders.isEmpty {
                     Text("No orders available")
@@ -19,7 +19,7 @@ struct OrdersView: View {
                         .padding()
                 } else {
                     ForEach(viewModel.orders, id: \.id) { order in
-                        NavigationLink(destination: OrderDetailView(orderID: order.id)) {
+                        NavigationLink(destination: OrderDetailView(orderID: order.id).environmentObject(viewModel)) {
                             VStack(alignment: .leading) {
                                 Text(order.movie.name)
                                     .font(.headline)
@@ -33,12 +33,8 @@ struct OrdersView: View {
                 }
             }
             .navigationTitle("Orders")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Refresh") {
-                        viewModel.fetchOrders()
-                    }
-                }
+            .onAppear {
+                viewModel.fetchOrders()
             }
         }
     }

@@ -1,3 +1,4 @@
+
 //
 //  MovieDetailView.swift
 //  Cinema
@@ -10,6 +11,7 @@ import SwiftUI
 struct MovieDetailView: View {
     @ObservedObject private var viewModel: MovieDetailViewModel
     @State private var selectedDate: Date = Calendar.current.startOfDay(for: Date())
+    @State private var errorMessage: String?
     let movieID: String
 
     init(movieID: String) {
@@ -102,6 +104,17 @@ struct MovieDetailView: View {
                         .padding()
                     }
                 }
+
+                if let errorMessage = errorMessage {
+                    Text(errorMessage)
+                        .foregroundColor(.red)
+                        .padding()
+                }
+            }
+        }
+        .onAppear {
+            if viewModel.movie == nil {
+                errorMessage = "Failed to load movie details."
             }
         }
     }

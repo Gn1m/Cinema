@@ -1,12 +1,12 @@
+// Movie.swift
+// Cinema
 //
-//  Movie.swift
-//  Cinema
-//
-//  Created by Ming Z on 5/5/2024.
+// Created by Ming Z on 5/5/2024.
 //
 
 import Foundation
 
+// Movie class represents a film with its basic information
 class Movie: Identifiable, Hashable {
     private let _id: String
     private var _name: String
@@ -14,6 +14,7 @@ class Movie: Identifiable, Hashable {
     private var _trailerLink: URL?
     private var _imageURL: URL?
 
+    // Initializer with optional parameters for trailerLink and imageURL
     init(id: String, name: String, description: String, trailerLink: URL? = nil, imageURL: URL? = nil) {
         self._id = id
         self._name = name
@@ -22,6 +23,7 @@ class Movie: Identifiable, Hashable {
         self._imageURL = imageURL
     }
 
+    // Computed properties for encapsulating the private variables
     var id: String {
         return _id
     }
@@ -46,7 +48,8 @@ class Movie: Identifiable, Hashable {
 
     var trailerLink: URL? {
         get {
-            return _trailerLink }
+            return _trailerLink
+        }
         set {
             _trailerLink = newValue
         }
@@ -54,12 +57,14 @@ class Movie: Identifiable, Hashable {
 
     var imageURL: URL? {
         get {
-            return _imageURL }
+            return _imageURL
+        }
         set {
             _imageURL = newValue
         }
     }
 
+    // Conforming to Hashable protocol
     static func == (lhs: Movie, rhs: Movie) -> Bool {
         return lhs._id == rhs._id
     }

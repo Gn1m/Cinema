@@ -12,22 +12,28 @@ struct MovieCardView: View {
 
     var body: some View {
         VStack {
-            // Ensure movie.imageURL is valid
             if let url = movie.imageURL {
-                AsyncImage(url: url) { image in
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: 150, height: 220)
-                        .clipped()
-                } placeholder: {
-                    Color.gray
-                        .frame(width: 150, height: 220)
+                GeometryReader { geometry in
+                    AsyncImage(url: url) { image in
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: geometry.size.width, height: geometry.size.height)
+                            .clipped()
+                    } placeholder: {
+                        Color.gray
+                            .frame(width: geometry.size.width, height: geometry.size.height)
+                    }
                 }
+                .aspectRatio(2/3, contentMode: .fit)
+                .frame(width: 150, height: 225)  
+                .cornerRadius(8)
+                .shadow(radius: 4)
             } else {
-                // Fallback view when imageURL is not provided
                 Color.gray
-                    .frame(width: 150, height: 220)
+                    .frame(width: 150, height: 225)
+                    .cornerRadius(8)
+                    .shadow(radius: 4)
             }
 
             Text(movie.name)

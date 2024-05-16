@@ -1,3 +1,11 @@
+
+//
+//  ContentView.swift
+//  Cinema
+//
+//  Created by Ming Z on 5/5/2024.
+//
+
 import SwiftUI
 
 struct SeatSelectionView: View {
@@ -119,7 +127,7 @@ struct SeatSelectionView: View {
             }
         }
         .onAppear {
-            viewModel.loadReservations()
+            viewModel.reloadSession(timeSlotID: viewModel.currentTimeSlot.id)
         }
     }
 }

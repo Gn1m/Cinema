@@ -11,5 +11,6 @@ struct AccountModel: Identifiable {
     var id = UUID()
     var username: String
     var account: String
+    var email: String
     var password: String
 }
