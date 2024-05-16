@@ -8,39 +8,55 @@
 import SwiftUI
 
 struct OrderDetailView: View {
-    @EnvironmentObject var orderVM: OrderViewModel  // Use EnvironmentObject to access the shared instance
-    var order: Order
+    @EnvironmentObject var orderVM: OrderViewModel
+    let orderID: String
+
+    var order: Order? {
+        orderVM.orders.first { $0.id == orderID }
+    }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            Text("Movie: \(order.movie.name)")
-                .font(.title)
-            Text("Order ID: \(order.id)")
-                .font(.headline)
-            Text("Ordered Time: \(order.session.date.formatted())")
-                .font(.headline)
-            Text("Time Slot: \(order.timeSlot.startTime.formatted()) to \(order.timeSlot.endTime.formatted())")
-                .font(.headline)
-            //ticketDetailsView
-            Button(action: {
-                orderVM.removeOrder(id: order.id)
-            }) {
-                Text("Cancel Order")
+        ScrollView {
+            if let order = order {
+                VStack(alignment: .leading, spacing: 20) {
+                    Text("Movie: \(order.movie.name)")
+                        .font(.title)
+                    Text("Order ID: \(order.id)")
+                        .font(.headline)
+                    Text("Ordered Time: \(order.session.date.formatted())")
+                        .font(.headline)
+                    Text("Time Slot: \(order.timeSlot.startTime.formatted()) to \(order.timeSlot.endTime.formatted())")
+                        .font(.headline)
+                    Text("Order Status: \(order.status.rawValue)")
+                        .font(.headline)
+                    ticketDetailsView(order: order)
+                    if order.status != .cancelled {
+                        Button("Cancel Order") {
+                            orderVM.cancelOrder(id: order.id)
+                        }
+                        .foregroundColor(.red)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                    }
+                    Spacer()
+                }
+                .padding()
+                .navigationTitle("Order Details")
+                .navigationBarTitleDisplayMode(.inline)
+            } else {
+                Text("Order not found.")
                     .foregroundColor(.red)
+                    .padding()
             }
-            Spacer()
         }
-        .padding()
-        .navigationTitle("Order Details")
-        .navigationBarTitleDisplayMode(.inline)
     }
-    
-//     Computed property to generate a view for ticket details
-//    private var ticketDetailsView: some View {
-//        VStack(alignment: .leading, spacing: 10) {
-//            ForEach(order.tickets, id: \.self) { ticket in
-//                Text("Ticket: \(ticket.type) - Seat: \(ticket.seatID) - Price: \(ticket.price, specifier: "%.2f")")
-//            }
-//        }
-//    }
+
+    private func ticketDetailsView(order: Order) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            ForEach(order.tickets, id: \.id) { ticket in
+                Text("Ticket: \(ticket.type.rawValue) x \(ticket.quantity) - Seat ID: \(ticket.seatID)")
+            }
+        }
+    }
 }

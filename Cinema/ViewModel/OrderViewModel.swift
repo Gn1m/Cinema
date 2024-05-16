@@ -10,29 +10,51 @@ import Combine
 
 class OrderViewModel: ObservableObject {
     static let shared = OrderViewModel()
-    
+
     @Published private(set) var orders: [Order] = []
-    
-    // 添加新订单
+
+    init() {
+        fetchOrders()
+    }
+
+    func fetchOrders() {
+        orders = CinemaModelManager.shared.allOrders
+    }
+
     func addOrder(_ order: Order) {
-        orders.append(order)
+        CinemaModelManager.shared.addOrder(order)
+        fetchOrders()
     }
-    
-    // 更新订单
+
     func updateOrder(id: String, newTickets: [Ticket]) {
-        if let index = orders.firstIndex(where: { $0.id == id }) {
-            // Retrieve the current order to access its timeSlot
-            let currentOrder = orders[index]
-            // Update the order with new tickets, keeping other details the same
-            orders[index] = Order(movie: currentOrder.movie, session: currentOrder.session, timeSlot: currentOrder.timeSlot, tickets: newTickets)
-        }
+        CinemaModelManager.shared.updateOrder(id: id, newTickets: newTickets)
+        fetchOrders()
     }
-    
-    func removeOrder(id: String) {
-        if let index = orders.firstIndex(where: { $0.id == id }) {
-            let order = orders[index]
-            orders.remove(at: index)
+
+    func cancelOrder(id: String) {
+        guard let orderIndex = orders.firstIndex(where: { $0.id == id }) else {
+            print("Order not found.")
+            return
         }
+
+        var order = orders[orderIndex]
+        let timeSlot = order.timeSlot
+
+        // Update seat status to available
+        timeSlot.seats.forEach { seat in
+            if order.tickets.contains(where: { $0.seatID == seat.id }) {
+                seat.status = .available
+            }
+        }
+
+        // Update order status to cancelled
+        order.updateStatus(newStatus: .cancelled)
+        orders[orderIndex] = order  // Keep the local cache in sync
+
+        CinemaModelManager.shared.replaceOrders(with: orders)
+        fetchOrders()  // Re-fetch orders to ensure UI is in sync
+
+        // Notify SeatSelectionViewModel to update seat statuses
+        NotificationCenter.default.post(name: .seatStatusUpdated, object: nil, userInfo: ["timeSlotID": timeSlot.id])
     }
 }
-    

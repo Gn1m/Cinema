@@ -8,32 +8,29 @@
 import SwiftUI
 
 struct MovieDetailView: View {
-    @StateObject private var viewModel: MovieDetailViewModel
+    @ObservedObject private var viewModel: MovieDetailViewModel
     @State private var selectedDate: Date = Calendar.current.startOfDay(for: Date())
-    let movie: Movie
-    
-    init(movie: Movie) {
-        self.movie = movie
-        self._viewModel = StateObject(wrappedValue: MovieDetailViewModel(movie: movie))
+    let movieID: String
+
+    init(movieID: String) {
+        self.movieID = movieID
+        self._viewModel = ObservedObject(wrappedValue: MovieDetailViewModel(movieID: movieID))
     }
-    
-    // 获取 `Session` 对象中的唯一日期列表
+
     var sessionDates: [Date] {
         let dates = viewModel.sessions.map { Calendar.current.startOfDay(for: $0.date) }
         return Array(Set(dates)).sorted()
     }
-    
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
-                // 电影海报部分
-                if let imageURL = movie.imageURL {
+                if let movie = viewModel.movie, let imageURL = movie.imageURL {
                     AsyncImage(url: imageURL) { image in
                         image
                             .resizable()
                             .aspectRatio(contentMode: .fill)
-                            .frame(height: UIScreen.main.bounds.width * 0.56) // 16:9 比例
-                            .alignmentGuide(.top) { d in d[.top] } // 使用顶部对齐
+                            .frame(height: UIScreen.main.bounds.width * 0.56)
                             .clipped()
                             .ignoresSafeArea(edges: .top)
                     } placeholder: {
@@ -42,17 +39,16 @@ struct MovieDetailView: View {
                             .ignoresSafeArea(edges: .top)
                     }
                 }
-                
-                // 电影信息部分
+
                 VStack(alignment: .leading, spacing: 8) {
-                    Text(movie.name)
+                    Text(viewModel.movie?.name ?? "")
                         .font(.largeTitle)
                         .bold()
-                    
-                    Text(movie.description)
+
+                    Text(viewModel.movie?.description ?? "")
                         .font(.body)
-                    
-                    if let trailerLink = movie.trailerLink {
+
+                    if let trailerLink = viewModel.movie?.trailerLink {
                         Link("Watch Trailer", destination: trailerLink)
                             .font(.headline)
                             .foregroundColor(.blue)
@@ -60,28 +56,24 @@ struct MovieDetailView: View {
                     }
                 }
                 .padding(.horizontal)
-                
+
                 Divider()
-                
-                // 根据电影类型显示不同内容
-                if let releasedMovie = movie as? ReleasedMovie {
-                    // 显示 ReleasedMovie 类型的独特部分
+
+                if let releasedMovie = viewModel.movie as? ReleasedMovie {
                     VStack(alignment: .leading) {
                         Text("Sessions")
                             .font(.headline)
                             .padding(.horizontal)
-                        
-                        // 日期选择
+
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack {
-                                // 使用 `sessionDates` 生成日期按钮
                                 ForEach(sessionDates, id: \.self) { date in
                                     Button(action: {
                                         selectedDate = date
                                     }) {
                                         Text(date, style: .date)
                                             .padding()
-                                            .background(selectedDate == date ? Color.red : Color.gray) // 判断条件
+                                            .background(selectedDate == date ? Color.red : Color.gray)
                                             .foregroundColor(.white)
                                             .cornerRadius(8)
                                     }
@@ -89,14 +81,13 @@ struct MovieDetailView: View {
                             }
                             .padding(.horizontal)
                         }
-                        
-                        // 过滤并显示当天的时间段
+
                         LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))], spacing: 16) {
                             ForEach(viewModel.sessions.filter { session in
                                 Calendar.current.isDate(session.date, inSameDayAs: selectedDate)
                             }) { session in
                                 ForEach(session.timeSlots) { slot in
-                                    NavigationLink(destination: SeatSelectionView(initialTimeSlot: slot, allTimeSlots: session.timeSlots)) {
+                                    NavigationLink(destination: SeatSelectionView(timeSlotID: slot.id, allTimeSlots: session.timeSlots)) {
                                         VStack {
                                             Text(slot.startTime, style: .time)
                                         }
@@ -116,10 +107,9 @@ struct MovieDetailView: View {
     }
 }
 
-// 预览部分
 struct MovieDetailView_Previews: PreviewProvider {
     static var previews: some View {
         let sampleMovie = SampleMoviesProvider.getComingSoonMovies().first!
-        MovieDetailView(movie: sampleMovie)
+        MovieDetailView(movieID: sampleMovie.id)
     }
 }

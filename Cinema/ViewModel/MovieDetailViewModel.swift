@@ -9,25 +9,13 @@ import Foundation
 import Combine
 
 class MovieDetailViewModel: ObservableObject {
+    @Published var movie: Movie?
     @Published var sessions: [Session] = []
-    @Published var selectedSession: Session?
 
-    private var movie: Movie
-
-    init(movie: Movie) {
-        self.movie = movie
-        
-        // Check if the movie is a ReleasedMovie to assign sessions
+    init(movieID: String) {
+        self.movie = CinemaModelManager.shared.movie(forID: movieID)
         if let releasedMovie = movie as? ReleasedMovie {
             self.sessions = releasedMovie.sessions
-        } else {
-            self.sessions = []
         }
     }
-
-    func selectSession(byID sessionID: String) {
-        self.selectedSession = sessions.first { $0.id == sessionID }
-    }
 }
-
-

@@ -5,8 +5,8 @@ struct SeatSelectionView: View {
     @State private var navigateToMainView = false
     private let allTimeSlots: [TimeSlot]
 
-    init(initialTimeSlot: TimeSlot, allTimeSlots: [TimeSlot]) {
-        _viewModel = StateObject(wrappedValue: SeatSelectionViewModel(initialTimeSlot: initialTimeSlot))
+    init(timeSlotID: String, allTimeSlots: [TimeSlot]) {
+        _viewModel = StateObject(wrappedValue: SeatSelectionViewModel(timeSlotID: timeSlotID))
         self.allTimeSlots = allTimeSlots
     }
 
@@ -21,7 +21,6 @@ struct SeatSelectionView: View {
 
     var body: some View {
         VStack {
-            // Ticket selection
             VStack(alignment: .leading, spacing: 10) {
                 Text("Select Tickets")
                     .font(.headline)
@@ -51,15 +50,12 @@ struct SeatSelectionView: View {
             Divider()
                 .padding(.vertical, 8)
 
-            // Front of Screen label
             Text("Front of Screen")
                 .font(.headline)
                 .bold()
                 .padding(.bottom, 8)
 
-            // Grid layout for seats
             HStack(alignment: .top) {
-                // Row labels on the left
                 VStack(alignment: .trailing) {
                     ForEach(rows, id: \.self) { row in
                         Text(row)
@@ -70,12 +66,10 @@ struct SeatSelectionView: View {
                 }
                 .padding(.trailing, 8)
 
-                // Seat grid
                 VStack(alignment: .leading, spacing: 12) {
                     ForEach(rows, id: \.self) { row in
                         HStack(spacing: 2) {
                             ForEach(columns, id: \.self) { column in
-                                // Add a wider gap to simulate the aisle
                                 if column == 3 || column == 9 {
                                     Spacer()
                                         .frame(width: 20)
@@ -95,7 +89,6 @@ struct SeatSelectionView: View {
             }
             .padding()
 
-            // Display error message if any
             if let errorMessage = viewModel.errorMessage {
                 Text(errorMessage)
                     .foregroundColor(.red)
@@ -104,7 +97,6 @@ struct SeatSelectionView: View {
                     .padding(.horizontal, 16)
             }
 
-            // Proceed button that reserves and navigates
             Button("Proceed") {
                 if viewModel.isSeatSelectionValid() {
                     viewModel.reserveSelectedSeats()
@@ -120,7 +112,6 @@ struct SeatSelectionView: View {
             .padding(.top, 8)
             .disabled(!viewModel.isSeatSelectionValid())
 
-            // NavigationLink to ContentView (Main View) with back button hidden
             NavigationLink(destination: ContentView()
                             .navigationBarBackButtonHidden(true),
                            isActive: $navigateToMainView) {

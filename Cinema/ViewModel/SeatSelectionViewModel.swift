@@ -19,9 +19,20 @@ class SeatSelectionViewModel: ObservableObject {
     private let adultTicketPrice: Double = 12.0
     private let childTicketPrice: Double = 8.0
 
-    init(initialTimeSlot: TimeSlot) {
-        self.currentTimeSlot = initialTimeSlot
-        self.seats = initialTimeSlot.seats
+    init(timeSlotID: String) {
+        guard let timeSlot = CinemaModelManager.shared.getAllSessions
+                .flatMap({ $0.timeSlots })
+                .first(where: { $0.id == timeSlotID }) else {
+            fatalError("Invalid timeSlotID")
+        }
+        self.currentTimeSlot = timeSlot
+        self.seats = timeSlot.seats
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(handleSeatStatusUpdate(_:)), name: .seatStatusUpdated, object: nil)
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 
     var totalTicketCount: Int {
@@ -52,9 +63,8 @@ class SeatSelectionViewModel: ObservableObject {
         }
         errorMessage = nil
         saveReservations()
-        addOrder()  // Automatically add order after seats are reserved
-        
-        // Clear current selections and reset ticket counts after successful order addition
+        addOrder()
+
         selectedSeats.removeAll()
         adultTickets = 0
         childTickets = 0
@@ -65,10 +75,10 @@ class SeatSelectionViewModel: ObservableObject {
         let reservedSeats = seats.filter { $0.status == .reserved }.map { $0.id }
         UserDefaults.standard.set(reservedSeats, forKey: "reservedSeats_\(currentTimeSlot.id)")
     }
-    
+
     func isSeatSelectionValid() -> Bool {
-            return selectedSeats.count == totalTicketCount
-        }
+        return selectedSeats.count == totalTicketCount
+    }
 
     private func addOrder() {
         guard selectedSeats.count == totalTicketCount else {
@@ -76,7 +86,6 @@ class SeatSelectionViewModel: ObservableObject {
             return
         }
 
-        // Fetch the necessary movie and session directly from currentTimeSlot
         let movie = CinemaModelManager.shared.movie(forID: currentTimeSlot.movieId)
         let session = CinemaModelManager.shared.session(forID: currentTimeSlot.sessionId)
 
@@ -85,13 +94,11 @@ class SeatSelectionViewModel: ObservableObject {
             return
         }
 
-        // Ensure we have exact number of seats selected as tickets
         if selectedSeats.count != adultTickets + childTickets {
             errorMessage = "Number of selected seats does not match the number of tickets."
             return
         }
 
-        // Create tickets with seat IDs
         var tickets: [Ticket] = []
         let selectedSeatIDs = Array(selectedSeats)
         for i in 0..<adultTickets {
@@ -101,11 +108,9 @@ class SeatSelectionViewModel: ObservableObject {
             tickets.append(Ticket(type: .child, quantity: 1, price: childTicketPrice, seatID: selectedSeatIDs[adultTickets + i]))
         }
 
-        // Create and add the order with the correct time slot
         let newOrder = Order(movie: movie, session: session, timeSlot: currentTimeSlot, tickets: tickets)
-        OrderViewModel.shared.addOrder(newOrder)
+        CinemaModelManager.shared.addOrder(newOrder)
     }
-
 
     func loadReservations() {
         if let reservedSeats = UserDefaults.standard.array(forKey: "reservedSeats_\(currentTimeSlot.id)") as? [String] {
@@ -116,11 +121,21 @@ class SeatSelectionViewModel: ObservableObject {
             }
         }
     }
-    
+
     func cancelSeat(seatID: String) {
-            if let index = seats.firstIndex(where: { $0.id == seatID }) {
-                seats[index].status = .available
-            }
+        if let index = seats.firstIndex(where: { $0.id == seatID }) {
+            seats[index].status = .available
         }
-    
+    }
+
+    @objc private func handleSeatStatusUpdate(_ notification: Notification) {
+        guard let userInfo = notification.userInfo, let timeSlotID = userInfo["timeSlotID"] as? String, timeSlotID == currentTimeSlot.id else {
+            return
+        }
+        self.seats = currentTimeSlot.seats
+    }
+}
+
+extension Notification.Name {
+    static let seatStatusUpdated = Notification.Name("seatStatusUpdated")
 }

@@ -13,9 +13,8 @@ enum SeatStatus {
 class Seat: Identifiable {
     let row: String
     let number: Int
-    private var _status: SeatStatus  // Changed from `let` to `var` to allow status updates
+    private var _status: SeatStatus
 
-    // 默认行和列的静态常量
     static let defaultRows = ["A", "B", "C", "D", "E"]
     static let defaultSeatsPerRow = 10
 
@@ -27,19 +26,17 @@ class Seat: Identifiable {
 
     var status: SeatStatus {
         get { return _status }
-        set { _status = newValue } // Allowing external setting of the status
+        set { _status = newValue }
     }
-    
+
     var id: String {
         return "\(row)\(number)"
     }
 
-    /// 返回状态已更新的副本
     func withStatus(_ newStatus: SeatStatus) -> Seat {
         return Seat(row: self.row, number: self.number, status: newStatus)
     }
 
-    /// 生成具有固定排列的座位列表
     static func generateSeats() -> [Seat] {
         var seats = [Seat]()
 

@@ -13,28 +13,33 @@ struct OrdersView: View {
     var body: some View {
         NavigationView {
             List {
-                ForEach(viewModel.orders, id: \.id) { order in
-                    NavigationLink(destination: OrderDetailView(order: order)) {
-                        VStack(alignment: .leading) {
-                            Text(order.movie.name)
-                                .font(.headline)
-                            Text("Session: \(order.session.date.formatted())")
-                                .font(.subheadline)
-                            Text("Order ID: \(order.id)")
-                                .font(.subheadline)
+                if viewModel.orders.isEmpty {
+                    Text("No orders available")
+                        .foregroundColor(.gray)
+                        .padding()
+                } else {
+                    ForEach(viewModel.orders, id: \.id) { order in
+                        NavigationLink(destination: OrderDetailView(orderID: order.id)) {
+                            VStack(alignment: .leading) {
+                                Text(order.movie.name)
+                                    .font(.headline)
+                                Text("Session: \(order.session.date.formatted())")
+                                    .font(.subheadline)
+                                Text("Order ID: \(order.id)")
+                                    .font(.subheadline)
+                            }
                         }
                     }
                 }
-                .onDelete(perform: deleteOrder)
             }
             .navigationTitle("Orders")
-        }
-    }
-
-    func deleteOrder(at offsets: IndexSet) {
-        offsets.forEach { index in
-            let orderId = viewModel.orders[index].id
-            viewModel.removeOrder(id: orderId)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Refresh") {
+                        viewModel.fetchOrders()
+                    }
+                }
+            }
         }
     }
 }

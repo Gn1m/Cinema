@@ -7,15 +7,13 @@
 
 import Foundation
 
-// Base class Movie, contains shared properties
 class Movie: Identifiable, Hashable {
     private let _id: String
     private var _name: String
     private var _description: String
     private var _trailerLink: URL?
     private var _imageURL: URL?
-    
-    // Initialiser for shared properties, including imageURL
+
     init(id: String, name: String, description: String, trailerLink: URL? = nil, imageURL: URL? = nil) {
         self._id = id
         self._name = name
@@ -24,7 +22,6 @@ class Movie: Identifiable, Hashable {
         self._imageURL = imageURL
     }
 
-    // Public properties for accessing private variables
     var id: String {
         return _id
     }
@@ -49,8 +46,7 @@ class Movie: Identifiable, Hashable {
 
     var trailerLink: URL? {
         get {
-            return _trailerLink
-        }
+            return _trailerLink }
         set {
             _trailerLink = newValue
         }
@@ -58,14 +54,12 @@ class Movie: Identifiable, Hashable {
 
     var imageURL: URL? {
         get {
-            return _imageURL
-        }
+            return _imageURL }
         set {
             _imageURL = newValue
         }
     }
 
-    // Conform to Hashable protocol for usage in collections and navigation
     static func == (lhs: Movie, rhs: Movie) -> Bool {
         return lhs._id == rhs._id
     }
