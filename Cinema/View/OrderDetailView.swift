@@ -12,6 +12,7 @@ import UIKit
 struct OrderDetailView: View {
     @EnvironmentObject var orderVM: OrderViewModel // Use the shared Order ViewModel.
     let orderID: String // ID for the order to be detailed.
+    private let barcodeGenerator = BarcodeGenerator() // Instance of BarcodeGenerator
 
     /// Retrieves the order based on the ID from the ViewModel.
     var order: Order? {
@@ -55,7 +56,7 @@ struct OrderDetailView: View {
                     ticketDetailsView(order: order)
 
                     // Generate and display a barcode for the order ID
-                    if let barcodeImage = generateBarcode(from: order.id) {
+                    if let barcodeImage = barcodeGenerator.generateBarcode(from: order.id) {
                         Image(uiImage: barcodeImage)
                             .resizable()
                             .interpolation(.none)
@@ -94,21 +95,6 @@ struct OrderDetailView: View {
                 Text("Ticket: \(ticket.type.rawValue) x \(ticket.quantity) - Seat ID: \(ticket.seatID) - Price: \(ticket.price, specifier: "%.2f")")
             }
         }
-    }
-
-    /// Generates a barcode image from a string using Core Image filters.
-    private func generateBarcode(from string: String) -> UIImage? {
-        let data = string.data(using: String.Encoding.ascii)
-        if let filter = CIFilter(name: "CICode128BarcodeGenerator") {
-            filter.setValue(data, forKey: "inputMessage")
-            if let output = filter.outputImage {
-                let scaleX = 3.0 // Increase barcode width
-                let scaleY = 3.0 // Increase barcode height
-                let transformedImage = output.transformed(by: CGAffineTransform(scaleX: CGFloat(scaleX), y: CGFloat(scaleY)))
-                return UIImage(ciImage: transformedImage)
-            }
-        }
-        return nil
     }
 }
 

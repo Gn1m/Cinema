@@ -21,11 +21,14 @@ class BarcodeGenerator {
             return nil
         }
 
-        if let cgImage = context.createCGImage(outputImage, from: outputImage.extent) {
+        let scaleX = 3.0
+        let scaleY = 3.0
+        let transformedImage = outputImage.transformed(by: CGAffineTransform(scaleX: CGFloat(scaleX), y: CGFloat(scaleY)))
+
+        if let cgImage = context.createCGImage(transformedImage, from: transformedImage.extent) {
             return UIImage(cgImage: cgImage)
         }
 
         return nil
     }
 }
-

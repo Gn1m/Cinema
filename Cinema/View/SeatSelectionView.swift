@@ -127,11 +127,11 @@ struct SeatSelectionView: View {
                 }
             }
             .padding()
-            .background($viewModel.isSeatSelectionValid ? Color.black : Color.gray)
+            .background(viewModel.isSeatSelectionValid() ? Color.black : Color.gray)
             .foregroundColor(.white)
             .cornerRadius(10)
             .padding(.top, 8)
-            .disabled(!$viewModel.isSeatSelectionValid)
+            .disabled(!viewModel.isSeatSelectionValid())
 
             NavigationLink(destination: ContentView()
                             .navigationBarBackButtonHidden(true),
@@ -140,8 +140,7 @@ struct SeatSelectionView: View {
             }
         }
         .onAppear {
-            // Reload the session data when the view appears.
-            $viewModel.reloadSession(timeSlotID: viewModel.currentTimeSlot.id)
+            viewModel.reloadSession(timeSlotID: viewModel.currentTimeSlot.id)
         }
     }
 }
