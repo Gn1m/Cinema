@@ -23,19 +23,11 @@ class Order: Identifiable, Hashable {
     var status: OrderStatus         // Current status of the order.
     var account: AccountModel?      // Optional account that made the order, nil if made by a guest.
 
-    /// Computed property to provide a string summarizing the ticket details in the order.
+    // provides a string summarising the ticket details in the order.
     var ticketDetails: String {
         tickets.map { "\($0.type): \($0.quantity) x $\($0.price)" }.joined(separator: ", ")
     }
 
-    /// Initializes a new order with all necessary details.
-    /// - Parameters:
-    ///   - movie: The movie for which tickets are being ordered.
-    ///   - session: The session during which the movie will be shown.
-    ///   - timeSlot: The specific time slot within the session.
-    ///   - tickets: Array of tickets included in the order.
-    ///   - status: Initial status of the order, defaults to `.preparing`.
-    ///   - account: Optional account that made the order.
     init(movie: Movie, session: Session, timeSlot: TimeSlot, tickets: [Ticket], status: OrderStatus = .preparing, account: AccountModel? = nil) {
         self.id = Order.generateUniqueID()
         self.movie = movie
@@ -46,24 +38,22 @@ class Order: Identifiable, Hashable {
         self.account = account
     }
 
-    /// Updates the status of the order.
-    /// - Parameter newStatus: The new status to set for the order.
+    // Updates the status of the order.
     func updateStatus(newStatus: OrderStatus) {
         self.status = newStatus
     }
 
-    /// Generates a unique identifier for the order.
-    /// - Returns: A unique string identifier.
+    // Generates a unique identifier for the order.
     private static func generateUniqueID() -> String {
         return UUID().uuidString
     }
 
-    /// Checks if two orders are the same based on their unique identifiers.
+    // Checks if two orders are the same based on their unique identifiers.
     static func == (lhs: Order, rhs: Order) -> Bool {
         lhs.id == rhs.id
     }
 
-    /// Hash function for conforming to the Hashable protocol.
+    // Hash function for conforming to the Hashable protocol.
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }

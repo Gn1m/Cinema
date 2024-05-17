@@ -8,25 +8,23 @@
 import Foundation
 import Combine
 
-/// ViewModel for managing the details of a movie.
+// ViewModel for managing the details of a movie.
 class MovieDetailViewModel: ObservableObject {
     @Published var movie: Movie?
     @Published var sessions: [Session] = []
 
-    /// Initializes the ViewModel for a specific movie.
-    /// - Parameter movieID: The identifier for the movie.
+    // Initializes the ViewModel for a specific movie.
     init(movieID: String) {
         loadMovieDetails(forID: movieID)
     }
 
-    /// Loads the movie and its sessions based on the movie ID.
-    /// - Parameter movieID: The identifier of the movie to load.
+    // Loads the movie and its sessions based on the movie ID.
     private func loadMovieDetails(forID movieID: String) {
         movie = CinemaModelManager.shared.movie(forID: movieID)
         updateSessionsForMovie()
     }
 
-    /// Updates the sessions if the movie is already released.
+    // Updates the sessions if the movie is already released.
     private func updateSessionsForMovie() {
         if let releasedMovie = movie as? ReleasedMovie {
             sessions = releasedMovie.sessions

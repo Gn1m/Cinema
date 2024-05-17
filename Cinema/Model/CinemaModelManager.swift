@@ -21,12 +21,11 @@ class CinemaModelManager: ObservableObject {
 
     private var hasLoadedMovies = false  // Flag to check if movies have been loaded.
 
-    /// Initializes and loads initial data.
     private init() {
         loadMovies()
     }
 
-    /// Loads movies from a sample provider.
+    // Loads movies from a sample provider.
     private func loadMovies() {
         if !hasLoadedMovies {
             releasedMovies = SampleMoviesProvider.getReleasedMovies()
@@ -39,49 +38,49 @@ class CinemaModelManager: ObservableObject {
         }
     }
 
-    /// Retrieves a movie by its ID.
+    // Retrieves a movie by its ID.
     func movie(forID id: String) -> Movie? {
         return allMovies.first { $0.id == id }
     }
 
-    /// Retrieves a session by its ID.
+    // Retrieves a session by its ID.
     func session(forID id: String) -> Session? {
         return allSessions.first { $0.id == id }
     }
 
-    /// Updates the list of movies.
+    // Updates the list of movies.
     func updateMovies(movies: [ReleasedMovie]) {
         self.releasedMovies = movies
         self.allMovies = releasedMovies + comingSoonMovies
         self.allSessions = releasedMovies.flatMap { $0.sessions }
     }
 
-    /// Returns released movies.
+    // Returns released movies.
     public var getReleasedMovies: [ReleasedMovie] {
         return releasedMovies
     }
 
-    /// Returns movies that are coming soon.
+    // Returns movies that are coming soon.
     public var getComingSoonMovies: [ComingSoonMovie] {
         return comingSoonMovies
     }
 
-    /// Returns all sessions.
+    // Returns all sessions.
     public var getAllSessions: [Session] {
         return allSessions
     }
 
-    /// Returns all orders.
+    // Returns all orders.
     var allOrders: [Order] {
         return orders
     }
 
-    /// Adds a new order.
+    // Adds a new order.
     func addOrder(_ order: Order) {
         orders.append(order)
     }
 
-    /// Updates an existing order with new tickets.
+    // Updates an existing order with new tickets.
     func updateOrder(id: String, newTickets: [Ticket]) {
         if let index = orders.firstIndex(where: { $0.id == id }) {
             let currentOrder = orders[index]
@@ -89,50 +88,50 @@ class CinemaModelManager: ObservableObject {
         }
     }
 
-    /// Removes an order by its ID.
+    // Removes an order by its ID.
     func removeOrder(id: String) {
         orders.removeAll { $0.id == id }
     }
 
-    /// Replaces the current list of orders with a new one.
+    // Replaces the current list of orders with a new one.
     func replaceOrders(with newOrders: [Order]) {
         orders = newOrders
     }
 
-    /// Adds a new session.
+    // Adds a new session.
     func addSession(_ session: Session) {
         allSessions.append(session)
     }
 
-    /// Updates an existing session with new time slots.
+    // Updates an existing session with new time slots.
     func updateSession(id: String, newTimeSlots: [TimeSlot]) {
         if let index = allSessions.firstIndex(where: { $0.id == id }) {
             allSessions[index].timeSlots = newTimeSlots
         }
     }
 
-    /// Removes a session by its ID.
+    // Removes a session by its ID.
     func removeSession(id: String) {
         allSessions.removeAll { $0.id == id }
     }
 
-    /// Replaces the current list of sessions with a new one.
+    // Replaces the current list of sessions with a new one.
     func replaceSessions(with newSessions: [Session]) {
         allSessions = newSessions
     }
 
-    /// Logs in with a specified account.
+    // Logs in with a specified account.
     func login(account: AccountModel) {
         self.currentAccount = account
     }
 
-    /// Logs out the current user and removes their orders.
+    // Logs out the current user and removes their orders.
     func logout() {
         self.currentAccount = nil
         orders.removeAll { $0.account != nil }  // Remove all orders associated with an account
     }
 
-    /// Retrieves orders made by the currently logged-in account.
+    // Retrieves orders made by the currently logged-in account.
     var currentAccountOrders: [Order] {
         if let account = currentAccount {
             return orders.filter { $0.account?.account == account.account }

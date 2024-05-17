@@ -8,40 +8,35 @@
 import Foundation
 import Combine
 
-/// ViewModel for managing movie orders.
+// ViewModel for managing movie orders.
 class OrderViewModel: ObservableObject {
     static let shared = OrderViewModel()
 
     @Published private(set) var orders: [Order] = []
 
-    /// Initializes the ViewModel by fetching initial orders.
+    // Initialises the ViewModel by fetching initial orders.
     init() {
         fetchOrders()
     }
 
-    /// Fetches orders from the model manager and updates the published orders property.
+    // Fetches orders from the model manager and updates the published orders property.
     func fetchOrders() {
         orders = CinemaModelManager.shared.currentAccountOrders
     }
 
-    /// Adds a new order and refreshes the list of orders.
-    /// - Parameter order: The new order to be added.
+    // Adds a new order and refreshes the list of orders.
     func addOrder(_ order: Order) {
         CinemaModelManager.shared.addOrder(order)
         fetchOrders()
     }
 
-    /// Updates an existing order with new tickets and refreshes the orders list.
-    /// - Parameters:
-    ///   - id: The identifier of the order to update.
-    ///   - newTickets: The new tickets to update the order with.
+    // Updates an existing order with new tickets and refreshes the orders list.
     func updateOrder(id: String, newTickets: [Ticket]) {
         CinemaModelManager.shared.updateOrder(id: id, newTickets: newTickets)
         fetchOrders()
     }
 
-    /// Cancels an order and updates seat availability and order status accordingly.
-    /// - Parameter id: The identifier of the order to cancel.
+    // Cancels an order and updates seat availability and order status accordingly.
     func cancelOrder(id: String) {
         guard let orderIndex = orders.firstIndex(where: { $0.id == id }) else {
             print("Order not found.")
@@ -61,8 +56,7 @@ class OrderViewModel: ObservableObject {
         NotificationCenter.default.post(name: .seatStatusUpdated, object: nil, userInfo: ["timeSlotID": timeSlot.id])
     }
 
-    /// Updates seat statuses to available in the Cinema Model Manager.
-    /// - Parameter order: The order whose seats need to be made available.
+    // Updates seat statuses to available in the Cinema Model Manager.
     private func updateSeatsAsAvailable(for order: Order) {
         for ticket in order.tickets {
             if let sessionIndex = CinemaModelManager.shared.getAllSessions.firstIndex(where: { $0.id == order.session.id }),
