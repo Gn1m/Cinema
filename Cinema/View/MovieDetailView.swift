@@ -1,11 +1,3 @@
-
-//
-//  MovieDetailView.swift
-//  Cinema
-//
-//  Created by Ming Z on 5/5/2024.
-//
-
 import SwiftUI
 
 /// View for displaying detailed information about a specific movie.
@@ -14,20 +6,19 @@ struct MovieDetailView: View {
     @State private var selectedDate: Date = Calendar.current.startOfDay(for: Date()) // State to manage the selected session date for viewing times.
     @State private var errorMessage: String? // State for displaying error messages.
     let movieID: String // ID of the movie being displayed.
-
-    /// Initializes the view with a specific movie ID.
-    /// - Parameter movieID: The ID of the movie for which to show details.
+    
+    
     init(movieID: String) {
         self.movieID = movieID
         self._viewModel = ObservedObject(wrappedValue: MovieDetailViewModel(movieID: movieID))
     }
-
+    
     /// Computes the unique session dates from the sessions associated with the movie.
     var sessionDates: [Date] {
         let dates = viewModel.sessions.map { Calendar.current.startOfDay(for: $0.date) }
         return Array(Set(dates)).sorted()
     }
-
+    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
@@ -46,16 +37,16 @@ struct MovieDetailView: View {
                             .ignoresSafeArea(edges: .top)
                     }
                 }
-
+                
                 // Textual details of the movie.
                 VStack(alignment: .leading, spacing: 8) {
                     Text(viewModel.movie?.name ?? "")
                         .font(.largeTitle)
                         .bold()
-
+                    
                     Text(viewModel.movie?.description ?? "")
                         .font(.body)
-
+                    
                     // Link to the movie's trailer.
                     if let trailerLink = viewModel.movie?.trailerLink {
                         Link("Watch Trailer", destination: trailerLink)
@@ -65,16 +56,16 @@ struct MovieDetailView: View {
                     }
                 }
                 .padding(.horizontal)
-
+                
                 Divider()
-
-                // Sections for movie sessions based on release.
+                
+                // Conditional display of session details.
                 if let releasedMovie = viewModel.movie as? ReleasedMovie {
                     VStack(alignment: .leading) {
                         Text("Sessions")
                             .font(.headline)
                             .padding(.horizontal)
-
+                        
                         // Horizontal scroll view for selecting session dates.
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack {
@@ -92,7 +83,7 @@ struct MovieDetailView: View {
                             }
                             .padding(.horizontal)
                         }
-
+                        
                         // Grid for selecting specific session times.
                         LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))], spacing: 16) {
                             ForEach(viewModel.sessions.filter { session in
@@ -113,8 +104,15 @@ struct MovieDetailView: View {
                         }
                         .padding()
                     }
+                } else if viewModel.movie is ComingSoonMovie {
+                    // Message for "Coming Soon" movies with no sessions.
+                    VStack(alignment: .leading) {
+                        Text("This movie is coming soon. Sessions will be available once it is released.")
+                            .font(.headline)
+                            .padding()
+                    }
                 }
-
+                
                 // Error message display.
                 if let errorMessage = errorMessage {
                     Text(errorMessage)

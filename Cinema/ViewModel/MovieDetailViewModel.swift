@@ -20,14 +20,15 @@ class MovieDetailViewModel: ObservableObject {
 
     // Loads the movie and its sessions based on the movie ID.
     private func loadMovieDetails(forID movieID: String) {
-        movie = CinemaModelManager.shared.movie(forID: movieID)
-        updateSessionsForMovie()
-    }
+        // Fetch the movie details
+        if let fetchedMovie = CinemaModelManager.shared.movie(forID: movieID) {
+            self.movie = fetchedMovie
 
-    // Updates the sessions if the movie is already released.
-    private func updateSessionsForMovie() {
-        if let releasedMovie = movie as? ReleasedMovie {
-            sessions = releasedMovie.sessions
+            // Update sessions if it's a ReleasedMovie
+            if let releasedMovie = fetchedMovie as? ReleasedMovie {
+                self.sessions = releasedMovie.sessions
+            }
         }
     }
 }
+

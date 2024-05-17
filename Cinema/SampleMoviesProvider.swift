@@ -55,7 +55,7 @@ class SampleMoviesProvider {
     
     // Method to return a list of ReleasedMovies
     static func getReleasedMovies() -> [ReleasedMovie] {
-        let movieDetails = [
+        return [
             ReleasedMovie(
                 id: "1",
                 name: "The Matrix",
@@ -81,8 +81,6 @@ class SampleMoviesProvider {
                 imageURL: URL(string: "https://m.media-amazon.com/images/I/51Qvs9i5a%2BL.AC.jpg")!
             )
         ]
-        
-        return movieDetails
     }
     
     
@@ -91,14 +89,14 @@ class SampleMoviesProvider {
     static func getComingSoonMovies() -> [ComingSoonMovie] {
         return [
             ComingSoonMovie(
-                id: "2",
+                id: "12",
                 name: "The Matrix Reloaded",
                 description: "Neo and the resistance join forces again to fight off the machines, attempting to decipher the virtual world's code and prevent humanity's extinction.",
                 trailerLink: URL(string: "https://www.youtube.com/watch?v=zsgrsiZoymA")!,
                 imageURL: URL(string: "https://m.media-amazon.com/images/I/51oBxmV-dML.jpg")!
             ),
             ComingSoonMovie(
-                id: "3",
+                id: "13",
                 name: "The Lord of the Rings: The Fellowship of the Ring",
                 description: "A meek Hobbit from the Shire and eight companions set out on a journey to destroy the powerful One Ring and save Middle-earth from the Dark Lord Sauron.",
                 trailerLink: URL(string: "https://www.youtube.com/watch?v=V75dMMIW2B4")!,
