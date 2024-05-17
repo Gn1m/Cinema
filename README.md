@@ -1,5 +1,8 @@
 # Cinema App
-Cinema is a SwiftUI-based application that allows users to browse and book movie tickets. 
+Cinema is a SwiftUI-based application that allows users to browse and book movie tickets.
+
+# Link #:https://github.com/Gn1m/Cinema.git
+
 ## Features
 
 - **Movies Browsing**: Scroll through a horizontally displayed list of movies and view details for each one.
@@ -22,3 +25,4 @@ Cinema is a SwiftUI-based application that allows users to browse and book movie
 - Swift 5.3 or later
 - iOS 14.0 or later
 - Xcode 12.0 or later
+https://github.com/Gn1m/Cinema.git
